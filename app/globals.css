@@ -1,0 +1,349 @@
+/** @import must precede all other statements */
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Oswald:wght@400;500;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 211 100% 30%; /* #004a99 */
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 45 100% 51%; /* #ffc107 */
+    --secondary-foreground: 211 100% 30%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 211 100% 30%;
+
+    --radius: 0.25rem;
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-roboto;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-oswald uppercase font-bold;
+  }
+
+  a {
+    @apply transition-colors;
+  }
+
+  button {
+    @apply transition-all;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideInUp {
+    from {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideInDown {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in-up {
+    animation: fadeInUp 0.8s ease-out forwards;
+  }
+
+  .animate-slide-in-up {
+    animation: slideInUp 0.6s ease-out forwards;
+  }
+
+  .animate-slide-in-down {
+    animation: slideInDown 0.6s ease-out forwards;
+  }
+
+  :where(p, span, li, h1, h2, h3, h4, h5, h6, a, button, label, td, th) {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  pre,
+  code {
+    overflow-x: auto;
+    white-space: pre;
+  }
+}
+
+@layer components {
+  /* Navigation items hover effects */
+  .nav-link {
+    @apply relative py-2 text-gray-800 font-oswald uppercase transition-colors;
+  }
+
+  .nav-link::after {
+    content: "";
+    @apply absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300;
+  }
+
+  .nav-link:hover::after,
+  .nav-link.active::after {
+    @apply w-full;
+  }
+
+  .nav-link:hover {
+    @apply text-primary;
+  }
+
+  /* Dropdown menu */
+  .dropdown-menu {
+    @apply absolute top-full left-0 bg-white shadow-lg border-t-4 border-primary opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 py-2 min-w-max z-50;
+  }
+
+  .dropdown-menu a {
+    @apply block px-6 py-3 text-gray-700 hover:text-white hover:bg-primary transition-colors text-sm font-oswald uppercase;
+  }
+
+  /* Button styles */
+  .btn-primary {
+    @apply bg-primary text-white hover:bg-primary/90 transition-colors px-8 py-3 font-oswald uppercase;
+  }
+
+  .btn-secondary {
+    @apply bg-secondary text-primary hover:bg-secondary/90 transition-colors px-8 py-3 font-bold font-oswald uppercase;
+  }
+
+  .btn-white {
+    @apply bg-white text-primary border border-primary hover:bg-primary hover:text-white transition-colors px-8 py-3 font-oswald uppercase;
+  }
+
+  /* Card hover effects */
+  .card-hover {
+    @apply transition-all duration-300 hover:shadow-lg;
+  }
+
+  .product-card {
+    @apply bg-white border border-gray-100 overflow-hidden transition-all duration-300 hover:border-primary/20 hover:shadow-lg;
+  }
+
+  .product-card:hover {
+    @apply scale-105;
+  }
+
+  .product-card-image {
+    @apply relative aspect-square overflow-hidden bg-gray-50;
+  }
+
+  .product-card-image img {
+    @apply w-full h-full object-contain p-4 transition-transform duration-500;
+  }
+
+  .product-card:hover .product-card-image img {
+    @apply scale-110;
+  }
+
+  /* Section backgrounds */
+  .section-white {
+    @apply bg-white;
+  }
+
+  .section-gray {
+    @apply bg-gray-50;
+  }
+
+  .section-light-gray {
+    @apply bg-gray-100;
+  }
+
+  .section-dark {
+    @apply bg-gray-900 text-white;
+  }
+
+  /* Section titles */
+  .section-title {
+    @apply text-3xl md:text-5xl font-oswald font-bold uppercase mb-6 text-gray-800;
+  }
+
+  .section-subtitle {
+    @apply text-lg text-gray-600 leading-relaxed;
+  }
+
+  /* Category cards */
+  .category-card {
+    @apply bg-white p-6 shadow-sm hover:shadow-md transition-all flex flex-col items-center text-center;
+  }
+
+  .category-card:hover {
+    @apply shadow-lg scale-105;
+  }
+
+  /* Feature list */
+  .feature-list li {
+    @apply flex items-center gap-3 text-gray-600;
+  }
+
+  /* Header styling */
+  .header-top {
+    @apply bg-primary text-white py-2 px-4 hidden md:block;
+  }
+
+  .header-main {
+    @apply bg-white border-b border-gray-100 sticky top-0 z-50;
+  }
+
+  /* Footer styling */
+  .footer-section {
+    @apply bg-gray-600 text-gray-800 pt-16 pb-8;
+  }
+
+  .footer-title {
+    @apply font-oswald text-gray-900 uppercase text-lg mb-6 border-l-4 border-primary pl-4 font-bold;
+  }
+
+  .footer-link {
+    @apply text-gray-700 hover:text-primary transition-colors;
+  }
+
+  /* Hero section */
+  .hero-content {
+    @apply max-w-2xl text-white text-center;
+  }
+
+  .hero-title {
+    @apply text-3xl md:text-6xl font-oswald font-bold mb-4 leading-tight;
+  }
+
+  .hero-subtitle {
+    @apply text-2xl md:text-5xl font-oswald font-bold text-secondary;
+  }
+
+  /* Slider controls */
+  .slider-control {
+    @apply bg-white/80 hover:bg-white text-primary p-3 transition-all rounded-full shadow-lg;
+  }
+
+  .slider-dot {
+    @apply w-3 h-3 rounded-full transition-all duration-300;
+  }
+
+  .slider-dot.active {
+    @apply bg-secondary w-8;
+  }
+
+  .slider-dot.inactive {
+    @apply bg-white/50 hover:bg-white/80;
+  }
+
+  /* Mobile menu */
+  .mobile-menu-toggle {
+    @apply lg:hidden text-gray-800 transition-colors hover:text-primary;
+  }
+
+  .mobile-menu {
+    @apply fixed top-0 right-0 h-full w-[280px] bg-white z-50 lg:hidden transition-transform duration-300 shadow-2xl;
+  }
+
+  .mobile-menu.open {
+    @apply translate-x-0;
+  }
+
+  .mobile-menu.closed {
+    @apply translate-x-full;
+  }
+}
