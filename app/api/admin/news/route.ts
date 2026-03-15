@@ -1,4 +1,5 @@
 import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/authOptions";
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { ZodError, z } from "zod";
@@ -13,7 +14,7 @@ const NewsSchema = z.object({
 });
 
 async function checkAuth() {
-  const session = await getServerSession();
+  const session = await getServerSession(authOptions);
   if (!session || session.user?.role !== "admin") {
     return { authorized: false };
   }

@@ -2,44 +2,15 @@ import Link from "next/link";
 import { ChevronRight, Calendar, User, ArrowRight, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-const newsItems = [
-  {
-    id: "mitek-viif-2025",
-    title: "MITEK TỎA SÁNG TẠI VIIF 2025 VỚI CÁC GIẢI PHÁP CÔNG NGHỆ MẠ TIÊN TIẾN",
-    date: { day: "18", month: "T11" },
-    image: "https://bizweb.dktcdn.net/thumb/large/100/424/639/articles/z7237180294827-cb1c68642c1ec9105391ef281c550c94.jpg?v=1763456409053",
-    summary: "Vào ngày 12–15/11/2025 vừa qua, Công ty Cổ phần Giải pháp Công nghệ MITEK đã tham gia Hội chợ Công nghiệp Quốc tế Việt Nam (VIIF 2025) tại Hà Nội. Tại đây, MITEK đã giới thiệu những công nghệ mạ tiên tiến nhất...",
-    author: "MITEK Admin"
-  },
-  {
-    id: "outing-2025",
-    title: 'OUTING 2025 "BUILD STRENGTH - BREAK LIMITS"',
-    date: { day: "17", month: "T07" },
-    image: "https://bizweb.dktcdn.net/thumb/large/100/424/639/articles/mitek-381.jpg?v=1763363914247",
-    summary: "Chương trình Outing 2025 với chủ đề 'Build Strength - Break Limits' đã diễn ra thành công rực rỡ, mang lại những giây phút gắn kết và trải nghiệm đáng nhớ cho toàn thể đội ngũ MITEK...",
-    author: "MITEK Admin"
-  },
-  {
-    id: "chuc-mung-ngay-phu-nu-2025",
-    title: "CHÚC MỪNG NGÀY PHỤ NỮ VIỆT NAM 20/10/2025",
-    date: { day: "20", month: "T10" },
-    image: "https://bizweb.dktcdn.net/thumb/large/100/424/639/articles/z7237180294827-cb1c68642c1ec9105391ef281c550c94.jpg?v=1763456409053",
-    summary: "Nhân ngày Phụ nữ Việt Nam 20/10, MITEK xin gửi những lời chúc tốt đẹp nhất đến toàn thể chị em phụ nữ. Chúc các chị em luôn xinh đẹp, hạnh phúc và thành công trong công việc cũng như cuộc sống...",
-    author: "MITEK Admin"
-  },
-  {
-    id: "hoi-thao-cong-nghe-ma",
-    title: "HỘI THẢO CÔNG NGHỆ MẠ VÀ HOÀN THIỆN BỀ MẶT 2025",
-    date: { day: "05", month: "T09" },
-    image: "https://bizweb.dktcdn.net/thumb/large/100/424/639/articles/mitek-381.jpg?v=1763363914247",
-    summary: "MITEK phối hợp cùng Hiệp hội Xi mạ Việt Nam tổ chức hội thảo chuyên đề về các giải pháp mạ thân thiện môi trường, thu hút sự tham gia của đông đảo các chuyên gia và doanh nghiệp trong ngành...",
-    author: "MITEK Admin"
-  }
-];
+import { db } from "@/lib/db";
 
-const sidebarNews = newsItems.slice(0, 3);
+export default async function News() {
+  const newsItems = await db.news.findMany({
+    where: { published: true },
+    orderBy: { createdAt: "desc" }
+  });
+  const sidebarNews = newsItems.slice(0, 3);
 
-export default function News() {
   return (
     <div className="bg-white min-h-screen">
       {/* Page Header */}
@@ -68,29 +39,29 @@ export default function News() {
                   <article key={news.id} className="group border border-gray-100 hover:border-primary/10 transition-all hover:shadow-xl bg-white flex flex-col h-full">
                     <div className="relative overflow-hidden aspect-[16/10]">
                       <img 
-                        src={news.image} 
+                        src={news.imageUrl as string} 
                         alt={news.title} 
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                       />
                       <div className="absolute top-4 left-4 bg-primary text-white p-3 text-center min-w-[60px] shadow-lg">
-                        <p className="font-oswald text-2xl font-bold leading-none">{news.date.day}</p>
-                        <p className="text-[10px] uppercase font-bold tracking-widest mt-1 opacity-80 border-t border-white/20 pt-1">{news.date.month}</p>
+                        <p className="font-oswald text-2xl font-bold leading-none">{new Date(news.createdAt).getDate()}</p>
+                        <p className="text-[10px] uppercase font-bold tracking-widest mt-1 opacity-80 border-t border-white/20 pt-1">T{new Date(news.createdAt).getMonth() + 1}</p>
                       </div>
                     </div>
                     <div className="p-8 flex-grow flex flex-col">
                       <div className="flex items-center gap-4 text-xs text-gray-400 mb-4 uppercase tracking-wider font-bold">
-                        <span className="flex items-center gap-1.5"><User size={14} className="text-primary" /> {news.author}</span>
-                        <span className="flex items-center gap-1.5"><Calendar size={14} className="text-primary" /> {news.date.day}/{news.date.month}/2025</span>
+                        <span className="flex items-center gap-1.5"><User size={14} className="text-primary" /> MITEK Admin</span>
+                        <span className="flex items-center gap-1.5"><Calendar size={14} className="text-primary" /> {new Date(news.createdAt).toLocaleDateString('vi-VN')}</span>
                       </div>
                       <h3 className="text-xl font-oswald font-bold uppercase mb-4 leading-snug group-hover:text-primary transition-colors line-clamp-2">
-                        <Link href={`/tin-tuc/${news.id}`}>{news.title}</Link>
+                        <Link href={`/tin-tuc/${news.slug}`}>{news.title}</Link>
                       </h3>
                       <p className="text-gray-500 text-sm leading-relaxed mb-6 line-clamp-3">
-                        {news.summary}
+                        {news.excerpt}
                       </p>
                       <div className="mt-auto">
                         <Link 
-                          href={`/tin-tuc/${news.id}`} 
+                          href={`/tin-tuc/${news.slug}`} 
                           className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-primary hover:gap-3 transition-all"
                         >
                           Xem chi tiết <ArrowRight size={14} />
@@ -151,13 +122,13 @@ export default function News() {
                     {sidebarNews.map((news) => (
                       <div key={news.id} className="flex gap-4 group">
                         <div className="w-20 h-20 shrink-0 overflow-hidden bg-white border border-gray-100">
-                          <img src={news.image} alt="" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                          <img src={news.imageUrl as string} alt="" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                         </div>
                         <div>
                           <h5 className="text-xs font-bold uppercase leading-tight line-clamp-2 group-hover:text-primary transition-colors">
-                            <Link href={`/tin-tuc/${news.id}`}>{news.title}</Link>
+                            <Link href={`/tin-tuc/${news.slug}`}>{news.title}</Link>
                           </h5>
-                          <p className="text-[10px] text-gray-400 mt-2 uppercase tracking-wider">{news.date.day}/{news.date.month}/2025</p>
+                          <p className="text-[10px] text-gray-400 mt-2 uppercase tracking-wider">{new Date(news.createdAt).toLocaleDateString('vi-VN')}</p>
                         </div>
                       </div>
                     ))}

@@ -2,17 +2,20 @@ import { ArrowRight, CheckCircle2, FlaskConical, Settings, ShieldCheck, Zap } fr
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { HeroSlider } from "@/components/HeroSlider";
-import { products } from "@/lib/mock-data";
+import { db } from "@/lib/db";
 
 const categories = [
-  { name: "Chất tẩy rửa", icon: <FlaskConical className="w-8 h-8" />, path: "/chat-tay-rua" },
   { name: "Mạ kẽm", icon: <ShieldCheck className="w-8 h-8" />, path: "/ma-kem" },
   { name: "Mạ đồng", icon: <Zap className="w-8 h-8" />, path: "/ma-dong" },
   { name: "Mạ niken", icon: <Settings className="w-8 h-8" />, path: "/ma-niken" },
 ];
 
-export default function Index() {
-  const featuredProducts = products.slice(0, 4);
+export default async function Index() {
+  const featuredProducts = await db.product.findMany({
+    take: 4,
+    orderBy: { createdAt: "desc" },
+    include: { category: true },
+  });
 
   return (
     <div className="bg-white">
@@ -106,7 +109,7 @@ export default function Index() {
               <div key={product.id} className="product-card">
                 <div className="product-card-image">
                   <img
-                    src={product.image}
+                    src={product.imageUrl || ""}
                     alt={product.name}
                   />
                   <div className="absolute inset-0 bg-primary/80 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -118,7 +121,7 @@ export default function Index() {
                   </div>
                 </div>
                 <div className="p-6">
-                  <span className="text-xs text-primary font-oswald uppercase tracking-wider mb-2 block">{product.categoryName}</span>
+                  <span className="text-xs text-primary font-oswald uppercase tracking-wider mb-2 block">{product.category.name}</span>
                   <h3 className="font-bold text-lg mb-2 text-gray-800 line-clamp-1 group-hover:text-primary transition-colors">
                     {product.name}
                   </h3>
