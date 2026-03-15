@@ -3,6 +3,7 @@ import { authOptions } from "@/lib/authOptions";
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { ZodError, z } from "zod";
+import { log } from "console";
 
 const ProductSchema = z.object({
   name: z.string().min(1),
@@ -56,6 +57,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(product, { status: 201 });
   } catch (error) {
+    console.log(error);
     if (error instanceof ZodError) {
       return NextResponse.json(
         { error: error.errors },

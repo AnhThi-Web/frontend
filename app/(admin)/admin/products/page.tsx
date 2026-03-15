@@ -20,6 +20,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import dynamic from "next/dynamic";
+import slugify from "slugify";
+
+// Dynamically import ReactQuill to avoid SSR issues
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
+import "react-quill/dist/quill.snow.css";
 
 interface Category {
   id: string;
@@ -40,6 +46,7 @@ export default function ProductsPage() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [uploading, setUploading] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [formData, setFormData] = useState({
@@ -72,6 +79,33 @@ export default function ProductsPage() {
       setError("Lỗi khi tải dữ liệu");
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    setError("");
+
+    const formDataUpload = new FormData();
+    formDataUpload.append("file", file);
+
+    try {
+      const res = await fetch("/api/admin/upload", {
+        method: "POST",
+        body: formDataUpload,
+      });
+
+      if (!res.ok) throw new Error("Thêm ảnh thất bại");
+
+      const data = await res.json();
+      setFormData((prev) => ({ ...prev, imageUrl: data.url }));
+    } catch (err) {
+      setError("Lỗi khi tải ảnh lên");
+    } finally {
+      setUploading(false);
     }
   }
 
@@ -166,9 +200,15 @@ export default function ProductsPage() {
                   </label>
                   <Input
                     value={formData.name}
-                    onChange={(e) =>
-                      setFormData({ ...formData, name: e.target.value })
-                    }
+                    onChange={(e) => {
+                      const newName = e.target.value;
+                      // Auto-generate slug if it's a new product or slug isn't manually changed yet
+                      const newSlug = !editingId || formData.slug === slugify(formData.name, { lower: true, locale: "vi" }) 
+                        ? slugify(newName, { lower: true, locale: "vi" }) 
+                        : formData.slug;
+
+                      setFormData({ ...formData, name: newName, slug: newSlug });
+                    }}
                     placeholder="VD: METCLEAN® SC10"
                     required
                   />
@@ -220,28 +260,37 @@ export default function ProductsPage() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-1">
-                    URL Hình Ảnh
+                    Hình Ảnh Dại Diện
                   </label>
-                  <Input
-                    value={formData.imageUrl}
-                    onChange={(e) =>
-                      setFormData({ ...formData, imageUrl: e.target.value })
-                    }
-                    placeholder="https://..."
-                  />
+                  <div className="flex gap-4 items-center">
+                    <Input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      disabled={uploading}
+                    />
+                    {uploading && <span className="text-sm text-gray-500">Đang tải...</span>}
+                  </div>
+                  {formData.imageUrl && (
+                    <div className="mt-2">
+                       <img src={formData.imageUrl} alt="Preview" className="w-24 h-24 object-cover rounded border" />
+                    </div>
+                  )}
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-1">
                     Chi Tiết
                   </label>
-                  <Textarea
-                    value={formData.details}
-                    onChange={(e) =>
-                      setFormData({ ...formData, details: e.target.value })
-                    }
-                    placeholder="Thông tin chi tiết về sản phẩm"
-                    rows={3}
-                  />
+                  <div className="border rounded-md">
+                    <ReactQuill
+                      theme="snow"
+                      value={formData.details}
+                      onChange={(value) =>
+                        setFormData({ ...formData, details: value })
+                      }
+                      className="h-64 mb-12" // mb-12 to account for the toolbar height overlapping if not careful sometimes, though snow usually handles it.
+                    />
+                  </div>
                 </div>
                 <Button type="submit" className="w-full">
                   {editingId ? "Cập Nhật" : "Thêm"}
