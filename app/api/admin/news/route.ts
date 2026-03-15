@@ -25,11 +25,21 @@ export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
     const published = searchParams.get("published");
-
-    const where = published ? { published: published === "true" } : {};
+    const search = searchParams.get("search") || "";
 
     const news = await db.news.findMany({
-      where,
+      where: {
+        AND: [
+          published ? { published: published === "true" } : {},
+          search ? {
+            OR: [
+              { title: { contains: search } },
+              { content: { contains: search } },
+              { excerpt: { contains: search } },
+            ],
+          } : {},
+        ],
+      },
       orderBy: { createdAt: "desc" },
     });
 
@@ -53,7 +63,7 @@ export async function POST(req: NextRequest) {
     const data = NewsSchema.parse(body);
 
     const article = await db.news.create({
-      data,
+      data: data as any,
     });
 
     return NextResponse.json(article, { status: 201 });

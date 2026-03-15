@@ -24,11 +24,29 @@ async function checkAuth() {
   return { authorized: true };
 }
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
+    const { searchParams } = new URL(req.url);
+    const search = searchParams.get("search") || "";
+    const categoryId = searchParams.get("categoryId") || "";
+
     const products = await db.product.findMany({
+      where: {
+        AND: [
+          search ? {
+            OR: [
+              { name: { contains: search } },
+              { description: { contains: search } },
+            ],
+          } : {},
+          categoryId ? { categoryId } : {},
+        ],
+      },
       include: {
         category: true,
+      },
+      orderBy: {
+        createdAt: "desc",
       },
     });
     return NextResponse.json(products);
@@ -51,7 +69,7 @@ export async function POST(req: NextRequest) {
     const data = ProductSchema.parse(body);
 
     const product = await db.product.create({
-      data,
+      data: data as any,
       include: { category: true },
     });
 

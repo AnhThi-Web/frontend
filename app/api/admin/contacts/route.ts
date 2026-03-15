@@ -2,14 +2,6 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { ZodError, z } from "zod";
-
-const CategorySchema = z.object({
-  name: z.string().min(1),
-  slug: z.string().min(1),
-  description: z.string().optional(),
-  imageUrl: z.string().optional(),
-});
 
 async function checkAuth() {
   const session = await getServerSession(authOptions);
@@ -20,53 +12,58 @@ async function checkAuth() {
 }
 
 export async function GET(req: NextRequest) {
-  try {
-    const { searchParams } = new URL(req.url);
-    const search = searchParams.get("search") || "";
-
-    const categories = await db.category.findMany({
-      where: search ? {
-        OR: [
-          { name: { contains: search } },
-          { description: { contains: search } },
-        ],
-      } : {},
-      include: { _count: { select: { products: true } } },
-      orderBy: { createdAt: "desc" },
-    });
-    return NextResponse.json(categories);
-  } catch (error) {
-    return NextResponse.json(
-      { error: "Failed to fetch categories" },
-      { status: 500 }
-    );
-  }
-}
-
-export async function POST(req: NextRequest) {
   const auth = await checkAuth();
   if (!auth.authorized) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
-    const body = await req.json();
-    const data = CategorySchema.parse(body);
+    const { searchParams } = new URL(req.url);
+    const search = searchParams.get("search") || "";
 
-    const category = await db.category.create({
-      data: data as any,
+    const messages = await db.contactMessage.findMany({
+      where: search ? {
+        OR: [
+          { name: { contains: search } },
+          { email: { contains: search } },
+          { subject: { contains: search } },
+          { message: { contains: search } },
+        ],
+      } : {},
+      orderBy: { createdAt: "desc" },
     });
 
-    return NextResponse.json(category, { status: 201 });
+    return NextResponse.json(messages);
   } catch (error) {
-    if (error instanceof ZodError) {
-      return NextResponse.json(
-        { error: error.errors },
-        { status: 400 }
-      );
-    }
     return NextResponse.json(
-      { error: "Failed to create category" },
+      { error: "Failed to fetch messages" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(req: NextRequest) {
+  const auth = await checkAuth();
+  if (!auth.authorized) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  try {
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get("id");
+
+    if (!id) {
+      return NextResponse.json({ error: "ID is required" }, { status: 400 });
+    }
+
+    await db.contactMessage.delete({
+      where: { id },
+    });
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    return NextResponse.json(
+      { error: "Failed to delete message" },
       { status: 500 }
     );
   }

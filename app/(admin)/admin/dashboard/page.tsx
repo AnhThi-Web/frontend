@@ -11,6 +11,7 @@ import {
   Newspaper,
   LogOut,
   Settings,
+  Mail,
 } from "lucide-react";
 
 export default function AdminDashboard() {
@@ -23,31 +24,17 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm">
-        <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">
-              MITEK Admin Panel
-            </h1>
-            <p className="text-sm text-gray-500">
-              Xin chào, {session?.user?.name}
-            </p>
-          </div>
-          <button
-            onClick={() => signOut()}
-            className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition"
-          >
-            <LogOut className="w-4 h-4" />
-            Đăng Xuất
-          </button>
-        </div>
-      </header>
+    <div className="p-8">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-slate-900 mb-2">
+          MITEK Admin Panel
+        </h1>
+        <p className="text-slate-500">
+          Xin chào, <span className="font-semibold text-primary">{session?.user?.name}</span>. Chúc bạn một ngày làm việc hiệu quả!
+        </p>
+      </div>
 
-      {/* Main Content */}
-      <main className="max-w-6xl mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {/* Products Card */}
           <Card className="p-6 hover:shadow-lg transition cursor-pointer">
             <Link href="/admin/products" className="block">
@@ -122,19 +109,19 @@ export default function AdminDashboard() {
             </div>
           </Card>
         </div>
-
-        {/* Info Box */}
-        <div className="mt-12 p-6 bg-blue-50 border border-blue-200 rounded-lg">
-          <h3 className="text-lg font-semibold text-blue-900 mb-2">
-            📝 Hướng Dẫn Sử Dụng
-          </h3>
-          <ul className="text-sm text-blue-800 space-y-1">
-            <li>• Click vào từng mục để quản lý sản phẩm, danh mục, tin tức</li>
-            <li>• Bạn có thể thêm, sửa, xóa và xuất bản nội dung</li>
-            <li>• Tất cả thay đổi được lưu trực tiếp vào database</li>
-          </ul>
-        </div>
-      </main>
+        
+      {/* Info Box */}
+      <div className="mt-12 p-6 bg-blue-50 border border-blue-200 rounded-lg">
+        <h3 className="text-lg font-semibold text-blue-900 mb-2 font-oswald uppercase">
+          📝 Hướng Dẫn Sử Dụng
+        </h3>
+        <ul className="text-sm text-blue-800 space-y-2">
+          <li>• <strong>Sản phẩm:</strong> Quản lý kho hàng, thông số kỹ thuật và hình ảnh sản phẩm.</li>
+          <li>• <strong>Danh mục:</strong> Phân loại sản phẩm để khách hàng dễ dàng tìm kiếm.</li>
+          <li>• <strong>Tin tức:</strong> Viết bài chia sẻ kỹ thuật, tin hoạt động công ty.</li>
+          <li>• <strong>Liên hệ:</strong> Theo dõi và phản hồi yêu cầu từ khách hàng.</li>
+        </ul>
+      </div>
     </div>
   );
 }

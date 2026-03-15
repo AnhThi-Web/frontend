@@ -167,6 +167,16 @@ exports.Prisma.NewsScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.ContactMessageScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  email: 'email',
+  phone: 'phone',
+  subject: 'subject',
+  message: 'message',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -214,12 +224,22 @@ exports.Prisma.NewsOrderByRelevanceFieldEnum = {
   imageUrl: 'imageUrl'
 };
 
+exports.Prisma.ContactMessageOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  email: 'email',
+  phone: 'phone',
+  subject: 'subject',
+  message: 'message'
+};
+
 
 exports.Prisma.ModelName = {
   AdminUser: 'AdminUser',
   Category: 'Category',
   Product: 'Product',
-  News: 'News'
+  News: 'News',
+  ContactMessage: 'ContactMessage'
 };
 
 /**

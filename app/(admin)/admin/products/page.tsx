@@ -11,7 +11,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Edit, Trash2, Plus, ArrowLeft } from "lucide-react";
+import { Edit, Trash2, Plus, ArrowLeft, Search, Package } from "lucide-react";
 import Link from "next/link";
 import {
   Select,
@@ -27,6 +27,9 @@ import slugify from "slugify";
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import "react-quill/dist/quill.snow.css";
 
+import { AdminHeader } from "@/components/admin/Header";
+import { format } from "date-fns";
+
 interface Category {
   id: string;
   name: string;
@@ -39,6 +42,11 @@ interface Product {
   description?: string;
   categoryId: string;
   category: Category;
+  imageUrl?: string;
+  details?: string;
+  features?: string;
+  specs?: string;
+  createdAt: string;
 }
 
 export default function ProductsPage() {
@@ -46,6 +54,8 @@ export default function ProductsPage() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategoryId, setSelectedCategoryId] = useState("all");
   const [uploading, setUploading] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -62,12 +72,16 @@ export default function ProductsPage() {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [searchTerm, selectedCategoryId]);
 
   async function fetchData() {
     try {
+      const productUrl = new URL("/api/admin/products", window.location.origin);
+      if (searchTerm) productUrl.searchParams.append("search", searchTerm);
+      if (selectedCategoryId !== "all") productUrl.searchParams.append("categoryId", selectedCategoryId);
+
       const [productsRes, categoriesRes] = await Promise.all([
-        fetch("/api/admin/products"),
+        fetch(productUrl.toString()),
         fetch("/api/admin/categories"),
       ]);
 
@@ -110,7 +124,7 @@ export default function ProductsPage() {
   }
 
   async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
+    if (e) e.preventDefault();
     setError("");
 
     try {
@@ -161,202 +175,235 @@ export default function ProductsPage() {
     }
   }
 
-  if (loading) return <div className="p-8">Đang tải...</div>;
-
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm">
-        <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center gap-4">
-            <Link
-              href="/admin/dashboard"
-              className="flex items-center gap-2 text-gray-600 hover:text-gray-900"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Quay Lại
-            </Link>
-            <h1 className="text-2xl font-bold text-gray-900">
-              Quản Lý Sản Phẩm
-            </h1>
+    <div className="flex flex-col h-full">
+      <AdminHeader 
+        placeholder="Tìm kiếm sản phẩm..." 
+        onSearch={(term) => setSearchTerm(term)} 
+      />
+      
+      <main className="flex-1 p-8 overflow-y-auto">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+          <div>
+            <h1 className="text-2xl font-bold text-slate-900">Quản Lý Sản Phẩm</h1>
+            <p className="text-slate-500">Danh mục kho hàng và thông số kỹ thuật</p>
           </div>
-          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-            <DialogTrigger asChild>
-              <Button className="flex items-center gap-2">
-                <Plus className="w-4 h-4" />
-                Thêm Sản Phẩm
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-              <DialogHeader>
-                <DialogTitle>
-                  {editingId ? "Chỉnh Sửa Sản Phẩm" : "Thêm Sản Phẩm Mới"}
-                </DialogTitle>
-              </DialogHeader>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium mb-1">
-                    Tên Sản Phẩm
-                  </label>
-                  <Input
-                    value={formData.name}
-                    onChange={(e) => {
-                      const newName = e.target.value;
-                      // Auto-generate slug if it's a new product or slug isn't manually changed yet
-                      const newSlug = !editingId || formData.slug === slugify(formData.name, { lower: true, locale: "vi" }) 
-                        ? slugify(newName, { lower: true, locale: "vi" }) 
-                        : formData.slug;
+          <div className="flex items-center gap-3">
+             <Select value={selectedCategoryId} onValueChange={setSelectedCategoryId}>
+                <SelectTrigger className="w-[200px] bg-white">
+                  <SelectValue placeholder="Tất cả danh mục" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Tất cả danh mục</SelectItem>
+                  {categories.map((cat) => (
+                    <SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
 
-                      setFormData({ ...formData, name: newName, slug: newSlug });
-                    }}
-                    placeholder="VD: METCLEAN® SC10"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">Slug</label>
-                  <Input
-                    value={formData.slug}
-                    onChange={(e) =>
-                      setFormData({ ...formData, slug: e.target.value })
-                    }
-                    placeholder="vd: metclean-sc10"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">
-                    Danh Mục
-                  </label>
-                  <Select
-                    value={formData.categoryId}
-                    onValueChange={(value) =>
-                      setFormData({ ...formData, categoryId: value })
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Chọn danh mục" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {categories.map((cat) => (
-                        <SelectItem key={cat.id} value={cat.id}>
-                          {cat.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">
-                    Mô Tả Ngắn
-                  </label>
-                  <Input
-                    value={formData.description}
-                    onChange={(e) =>
-                      setFormData({ ...formData, description: e.target.value })
-                    }
-                    placeholder="Mô tả ngắn gọn"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">
-                    Hình Ảnh Dại Diện
-                  </label>
-                  <div className="flex gap-4 items-center">
-                    <Input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleImageUpload}
-                      disabled={uploading}
-                    />
-                    {uploading && <span className="text-sm text-gray-500">Đang tải...</span>}
-                  </div>
-                  {formData.imageUrl && (
-                    <div className="mt-2">
-                       <img src={formData.imageUrl} alt="Preview" className="w-24 h-24 object-cover rounded border" />
-                    </div>
-                  )}
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">
-                    Chi Tiết
-                  </label>
-                  <div className="border rounded-md">
-                    <ReactQuill
-                      theme="snow"
-                      value={formData.details}
-                      onChange={(value) =>
-                        setFormData({ ...formData, details: value })
-                      }
-                      className="h-64 mb-12" // mb-12 to account for the toolbar height overlapping if not careful sometimes, though snow usually handles it.
-                    />
-                  </div>
-                </div>
-                <Button type="submit" className="w-full">
-                  {editingId ? "Cập Nhật" : "Thêm"}
+            <Dialog open={dialogOpen} onOpenChange={(open) => {
+              setDialogOpen(open);
+              if (!open) {
+                setEditingId(null);
+                setFormData({
+                  name: "",
+                  slug: "",
+                  description: "",
+                  categoryId: "",
+                  details: "",
+                  imageUrl: "",
+                  features: "",
+                  specs: "",
+                });
+              }
+            }}>
+              <DialogTrigger asChild>
+                <Button className="gap-2 px-6">
+                  <Plus className="w-4 h-4" />
+                  Thêm Sản Phẩm
                 </Button>
-              </form>
-            </DialogContent>
-          </Dialog>
-        </div>
-      </header>
+              </DialogTrigger>
+              <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+                <DialogHeader>
+                  <DialogTitle>
+                    {editingId ? "Chỉnh Sửa Sản Phẩm" : "Thêm Sản Phẩm Mới"}
+                  </DialogTitle>
+                </DialogHeader>
+                <form onSubmit={handleSubmit} className="space-y-6 pt-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Tên Sản Phẩm</label>
+                      <Input
+                        value={formData.name}
+                        onChange={(e) => {
+                          const name = e.target.value;
+                          const slug = slugify(name, { lower: true, locale: "vi" });
+                          setFormData({ ...formData, name, slug: editingId ? formData.slug : slug });
+                        }}
+                        placeholder="VD: Xi mạ kẽm lạnh"
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium">Slug</label>
+                        <Input
+                          value={formData.slug}
+                          onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
+                          placeholder="vd: xi-ma-kem-lanh"
+                          required
+                        />
+                    </div>
+                  </div>
 
-      {/* Content */}
-      <main className="max-w-6xl mx-auto px-4 py-8">
-        {error && (
-          <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
-            {error}
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Danh Mục</label>
+                      <Select
+                        value={formData.categoryId}
+                        onValueChange={(val) => setFormData({ ...formData, categoryId: val })}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Chọn danh mục" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {categories.map((cat) => (
+                            <SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium">Ảnh Đại Diện</label>
+                        <div className="flex gap-2">
+                           <Input type="file" onChange={handleImageUpload} disabled={uploading} className="cursor-pointer" />
+                           {formData.imageUrl && <div className="h-10 w-10 shrink-0 border rounded-md overflow-hidden bg-slate-100"><img src={formData.imageUrl} className="w-full h-full object-cover" /></div>}
+                        </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Mô Tả Ngắn</label>
+                    <Input
+                      value={formData.description}
+                      onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                      placeholder="Tóm tắt về sản phẩm"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Chi Tiết Sản Phẩm</label>
+                    <div className="border rounded-md min-h-[300px] overflow-hidden">
+                      <ReactQuill
+                        theme="snow"
+                        value={formData.details}
+                        onChange={(val) => setFormData({ ...formData, details: val })}
+                        className="h-[250px]"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3 pt-6">
+                    <Button type="button" variant="outline" className="flex-1" onClick={() => setDialogOpen(false)}>Hủy</Button>
+                    <Button type="submit" className="flex-1" disabled={uploading}>
+                      {editingId ? "Cập Nhật" : "Thêm Sản Phẩm"}
+                    </Button>
+                  </div>
+                </form>
+              </DialogContent>
+            </Dialog>
           </div>
+        </div>
+
+        {error && (
+            <div className="mb-6 p-4 bg-red-50 border border-red-100 rounded-lg text-red-600 text-sm flex items-center gap-2">
+              <span className="w-1.5 h-1.5 bg-red-600 rounded-full"></span>
+              {error}
+            </div>
         )}
 
-        <div className="grid gap-4">
-          {products.map((product) => (
-            <div
-              key={product.id}
-              className="bg-white p-4 rounded-lg border border-gray-200 flex justify-between items-center"
-            >
-              <div>
-                <h3 className="font-semibold text-gray-900">{product.name}</h3>
-                <p className="text-sm text-gray-500">
-                  /{product.slug} • {product.category.name}
-                </p>
-                {product.description && (
-                  <p className="text-sm text-gray-600 mt-1">
-                    {product.description}
-                  </p>
-                )}
-              </div>
-              <div className="flex gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => {
-                    setEditingId(product.id);
-                    setFormData({
-                      name: product.name,
-                      slug: product.slug,
-                      description: product.description || "",
-                      categoryId: product.categoryId,
-                      details: "",
-                      imageUrl: "",
-                      features: "",
-                      specs: "",
-                    });
-                    setDialogOpen(true);
-                  }}
-                >
-                  <Edit className="w-4 h-4" />
-                </Button>
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  onClick={() => handleDelete(product.id)}
-                >
-                  <Trash2 className="w-4 h-4" />
-                </Button>
-              </div>
-            </div>
-          ))}
+        <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden text-sm">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="bg-slate-50 border-b border-slate-200">
+                <th className="px-6 py-4 font-semibold text-slate-600">Sản Phẩm</th>
+                <th className="px-6 py-4 font-semibold text-slate-600">Danh Mục</th>
+                <th className="px-6 py-4 font-semibold text-slate-600">Ngày Tạo</th>
+                <th className="px-6 py-4 font-semibold text-slate-600 text-right">Thao Tác</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              {loading ? (
+                <tr>
+                  <td colSpan={4} className="px-6 py-12 text-center text-slate-400">Đang tải dữ liệu...</td>
+                </tr>
+              ) : products.length === 0 ? (
+                <tr>
+                  <td colSpan={4} className="px-6 py-12 text-center text-slate-400">Không tìm thấy sản phẩm nào.</td>
+                </tr>
+              ) : (
+                products.map((product) => (
+                  <tr key={product.id} className="hover:bg-slate-50/50 transition-colors">
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-4">
+                        <div className="h-12 w-12 rounded-lg bg-slate-100 border overflow-hidden shrink-0">
+                          {product.imageUrl ? (
+                            <img src={product.imageUrl} alt={product.name} className="w-full h-full object-cover" />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center text-slate-300"><Package size={20} /></div>
+                          )}
+                        </div>
+                        <div>
+                          <div className="font-semibold text-slate-900">{product.name}</div>
+                          <div className="text-xs text-slate-500 font-mono">/{product.slug}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                       <span className="bg-blue-50 text-blue-700 px-2 py-1 rounded-md text-xs font-medium">
+                        {product.category?.name || "N/A"}
+                       </span>
+                    </td>
+                    <td className="px-6 py-4 text-slate-600">
+                      {format(new Date(product.createdAt), "dd/MM/yyyy")}
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                       <div className="flex justify-end gap-2">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 text-blue-600 hover:bg-blue-50"
+                          onClick={() => {
+                            setEditingId(product.id);
+                            setFormData({
+                              name: product.name,
+                              slug: product.slug,
+                              description: product.description || "",
+                              categoryId: product.categoryId,
+                              details: product.details || "",
+                              imageUrl: product.imageUrl || "",
+                              features: product.features || "",
+                              specs: product.specs || "",
+                            });
+                            setDialogOpen(true);
+                          }}
+                        >
+                          <Edit className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 text-red-600 hover:bg-red-50"
+                          onClick={() => handleDelete(product.id)}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
         </div>
       </main>
     </div>

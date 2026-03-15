@@ -1,20 +1,20 @@
-import { ArrowRight, CheckCircle2, FlaskConical, Settings, ShieldCheck, Zap } from "lucide-react";
+import { ArrowRight, CheckCircle2, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { HeroSlider } from "@/components/HeroSlider";
 import { db } from "@/lib/db";
-
-const categories = [
-  { name: "Mạ kẽm", icon: <ShieldCheck className="w-8 h-8" />, path: "/ma-kem" },
-  { name: "Mạ đồng", icon: <Zap className="w-8 h-8" />, path: "/ma-dong" },
-  { name: "Mạ niken", icon: <Settings className="w-8 h-8" />, path: "/ma-niken" },
-];
 
 export default async function Index() {
   const featuredProducts = await db.product.findMany({
     take: 4,
     orderBy: { createdAt: "desc" },
     include: { category: true },
+  });
+
+  const categories = await db.category.findMany({
+    take: 8,
+    orderBy: { createdAt: "desc" },
+    include: { _count: { select: { products: true } } }
   });
 
   return (
@@ -25,19 +25,24 @@ export default async function Index() {
       {/* Categories Bar */}
       <section className="section-gray py-12">
         <div className="container px-4">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="text-center mb-8">
+             <h2 className="text-2xl font-bold font-oswald uppercase text-slate-900 tracking-wider">Danh mục sản phẩm</h2>
+             <div className="w-12 h-1 bg-primary mx-auto mt-2" />
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-6">
             {categories.map((cat) => (
               <Link
-                key={cat.name}
-                href={cat.path}
-                className="category-card"
+                key={cat.id}
+                href={`/san-pham?category=${cat.slug}`}
+                className="category-card group bg-white p-6 border rounded-xl hover:shadow-lg transition-all text-center"
               >
-                <div className="text-primary group-hover:scale-110 transition-transform mb-4">
-                  {cat.icon}
+                <div className="text-primary group-hover:scale-110 transition-transform mb-4 flex justify-center">
+                  <ShieldCheck className="w-8 h-8" />
                 </div>
                 <h3 className="font-oswald uppercase text-sm font-semibold tracking-wider text-gray-800">
                   {cat.name}
                 </h3>
+                <p className="text-xs text-slate-400 mt-1">{cat._count.products} sản phẩm</p>
               </Link>
             ))}
           </div>

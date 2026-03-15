@@ -7,7 +7,8 @@ interface FormData {
   name: string;
   email: string;
   phone: string;
-  body: string;
+  subject: string;
+  message: string;
 }
 
 export const ContactForm = () => {
@@ -15,7 +16,8 @@ export const ContactForm = () => {
     name: "",
     email: "",
     phone: "",
-    body: "",
+    subject: "",
+    message: "",
   });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
@@ -29,7 +31,7 @@ export const ContactForm = () => {
   };
 
   const handlePhoneInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/[^\d.]/g, "");
+    const value = e.target.value.replace(/[^\d]/g, "");
     setFormData((prev) => ({
       ...prev,
       phone: value,
@@ -42,14 +44,12 @@ export const ContactForm = () => {
     setMessage(null);
 
     try {
-      // Validate form data
-      if (!formData.name || !formData.email || !formData.phone || !formData.body) {
+      if (!formData.name || !formData.email || !formData.phone || !formData.message) {
         setMessage({ type: "error", text: "Vui lòng điền đầy đủ thông tin các trường bắt buộc" });
         setLoading(false);
         return;
       }
 
-      // Email validation
       const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,63}$/;
       if (!emailRegex.test(formData.email)) {
         setMessage({ type: "error", text: "Vui lòng nhập địa chỉ email hợp lệ" });
@@ -57,14 +57,21 @@ export const ContactForm = () => {
         return;
       }
 
-      // Here you would typically send the form data to your backend
-      // For now, we'll simulate a successful submission
-      console.log("Form submitted:", formData);
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || "Gửi tin nhắn thất bại");
+      }
       
-      setMessage({ type: "success", text: "Cảm ơn bạn! Chúng tôi sẽ liên hệ với bạn sớm nhất." });
-      setFormData({ name: "", email: "", phone: "", body: "" });
-    } catch (error) {
-      setMessage({ type: "error", text: "Đã có lỗi xảy ra. Vui lòng thử lại." });
+      setMessage({ type: "success", text: "Cảm ơn bạn! Chúng tôi đã nhận được tin nhắn và sẽ liên hệ với bạn sớm nhất." });
+      setFormData({ name: "", email: "", phone: "", subject: "", message: "" });
+    } catch (error: any) {
+      setMessage({ type: "error", text: error.message || "Đã có lỗi xảy ra. Vui lòng thử lại sau." });
     } finally {
       setLoading(false);
     }
@@ -123,10 +130,21 @@ export const ContactForm = () => {
         </div>
 
         <div>
+          <input
+            type="text"
+            name="subject"
+            placeholder="Chủ đề (không bắt buộc)"
+            value={formData.subject}
+            onChange={handleChange}
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+          />
+        </div>
+
+        <div>
           <textarea
-            name="body"
+            name="message"
             placeholder="Nhập nội dung*"
-            value={formData.body}
+            value={formData.message}
             onChange={handleChange}
             required
             rows={6}

@@ -12,14 +12,19 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Edit, Trash2, Plus, ArrowLeft } from "lucide-react";
+import { Edit, Trash2, Plus, ArrowLeft, Search } from "lucide-react";
 import Link from "next/link";
+import { Textarea } from "@/components/ui/textarea";
+
+import { AdminHeader } from "@/components/admin/Header";
+import { format } from "date-fns";
 
 interface Category {
   id: string;
   name: string;
   slug: string;
   description?: string;
+  createdAt: string;
   _count?: { products: number };
 }
 
@@ -27,7 +32,9 @@ export default function CategoriesPage() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     slug: "",
@@ -36,11 +43,14 @@ export default function CategoriesPage() {
 
   useEffect(() => {
     fetchCategories();
-  }, []);
+  }, [searchTerm]);
 
   async function fetchCategories() {
     try {
-      const res = await fetch("/api/admin/categories");
+      const url = searchTerm 
+        ? `/api/admin/categories?search=${encodeURIComponent(searchTerm)}` 
+        : "/api/admin/categories";
+      const res = await fetch(url);
       if (!res.ok) throw new Error("Failed to fetch");
       const data = await res.json();
       setCategories(data);
@@ -52,7 +62,7 @@ export default function CategoriesPage() {
   }
 
   async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
+    if (e) e.preventDefault();
     setError("");
 
     try {
@@ -72,6 +82,7 @@ export default function CategoriesPage() {
 
       setFormData({ name: "", slug: "", description: "" });
       setEditingId(null);
+      setDialogOpen(false);
       fetchCategories();
     } catch (err) {
       setError("Lỗi khi lưu danh mục");
@@ -93,26 +104,28 @@ export default function CategoriesPage() {
     }
   }
 
-  if (loading) return <div className="p-8">Đang tải...</div>;
-
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm">
-        <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center gap-4">
-            <Link
-              href="/admin/dashboard"
-              className="flex items-center gap-2 text-gray-600 hover:text-gray-900"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Quay Lại
-            </Link>
-            <h1 className="text-2xl font-bold text-gray-900">Quản Lý Danh Mục</h1>
+    <div className="flex flex-col h-full">
+      <AdminHeader 
+        placeholder="Tìm kiếm danh mục..." 
+        onSearch={(term) => setSearchTerm(term)} 
+      />
+      
+      <main className="flex-1 p-8 overflow-y-auto">
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="text-2xl font-bold text-slate-900">Quản Lý Danh Mục</h1>
+            <p className="text-slate-500">Tạo và quản lý các nhóm sản phẩm của bạn</p>
           </div>
-          <Dialog>
+          <Dialog open={dialogOpen} onOpenChange={(open) => {
+            setDialogOpen(open);
+            if (!open) {
+              setEditingId(null);
+              setFormData({ name: "", slug: "", description: "" });
+            }
+          }}>
             <DialogTrigger asChild>
-              <Button className="flex items-center gap-2">
+              <Button className="gap-2 px-6">
                 <Plus className="w-4 h-4" />
                 Thêm Danh Mục
               </Button>
@@ -123,23 +136,25 @@ export default function CategoriesPage() {
                   {editingId ? "Chỉnh Sửa Danh Mục" : "Thêm Danh Mục Mới"}
                 </DialogTitle>
               </DialogHeader>
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-4 pt-4">
                 <div>
-                  <label className="block text-sm font-medium mb-1">
+                  <label className="block text-sm font-medium mb-1.5 text-slate-700">
                     Tên Danh Mục
                   </label>
                   <Input
                     value={formData.name}
-                    onChange={(e) =>
-                      setFormData({ ...formData, name: e.target.value })
-                    }
+                    onChange={(e) => {
+                      const name = e.target.value;
+                      const slug = name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "-").replace(/[^\w-]+/g, "");
+                      setFormData({ ...formData, name, slug: editingId ? formData.slug : slug });
+                    }}
                     placeholder="VD: Chất tẩy rửa"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">
-                    Slug
+                  <label className="block text-sm font-medium mb-1.5 text-slate-700">
+                    Slug (Tự động)
                   </label>
                   <Input
                     value={formData.slug}
@@ -151,74 +166,105 @@ export default function CategoriesPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">
+                  <label className="block text-sm font-medium mb-1.5 text-slate-700">
                     Mô Tả
                   </label>
-                  <Input
+                  <Textarea
                     value={formData.description}
                     onChange={(e) =>
                       setFormData({ ...formData, description: e.target.value })
                     }
                     placeholder="Mô tả danh mục"
+                    rows={3}
                   />
                 </div>
-                <Button type="submit" className="w-full">
-                  {editingId ? "Cập Nhật" : "Thêm"}
-                </Button>
+                <div className="flex gap-3 pt-4">
+                  <Button type="button" variant="outline" className="flex-1" onClick={() => setDialogOpen(false)}>Hủy</Button>
+                  <Button type="submit" className="flex-1">
+                    {editingId ? "Cập Nhật" : "Thêm Ngay"}
+                  </Button>
+                </div>
               </form>
             </DialogContent>
           </Dialog>
         </div>
-      </header>
 
-      {/* Content */}
-      <main className="max-w-6xl mx-auto px-4 py-8">
         {error && (
-          <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
+          <div className="mb-6 p-4 bg-red-50 border border-red-100 rounded-lg text-red-600 text-sm flex items-center gap-2">
+            <span className="w-1.5 h-1.5 bg-red-600 rounded-full"></span>
             {error}
           </div>
         )}
 
-        <div className="grid gap-4">
-          {categories.map((cat) => (
-            <div
-              key={cat.id}
-              className="bg-white p-4 rounded-lg border border-gray-200 flex justify-between items-center"
-            >
-              <div>
-                <h3 className="font-semibold text-gray-900">{cat.name}</h3>
-                <p className="text-sm text-gray-500">/{cat.slug}</p>
-                {cat._count && (
-                  <p className="text-xs text-gray-400 mt-1">
-                    {cat._count.products} sản phẩm
-                  </p>
-                )}
-              </div>
-              <div className="flex gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => {
-                    setEditingId(cat.id);
-                    setFormData({
-                      name: cat.name,
-                      slug: cat.slug,
-                      description: cat.description || "",
-                    });
-                  }}
-                >
-                  <Edit className="w-4 h-4" />
-                </Button>
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  onClick={() => handleDelete(cat.id)}
-                >
-                  <Trash2 className="w-4 h-4" />
-                </Button>
-              </div>
-            </div>
-          ))}
+        <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="bg-slate-50 border-b border-slate-200">
+                <th className="px-6 py-4 text-sm font-semibold text-slate-600">ID/Slug</th>
+                <th className="px-6 py-4 text-sm font-semibold text-slate-600">Tên Danh Mục</th>
+                <th className="px-6 py-4 text-sm font-semibold text-slate-600">Sản Phẩm</th>
+                <th className="px-6 py-4 text-sm font-semibold text-slate-600">Ngày Tạo</th>
+                <th className="px-6 py-4 text-sm font-semibold text-slate-600 text-right">Thao Tác</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              {loading ? (
+                <tr>
+                  <td colSpan={5} className="px-6 py-12 text-center text-slate-400">Đang tải dữ liệu...</td>
+                </tr>
+              ) : categories.length === 0 ? (
+                <tr>
+                  <td colSpan={5} className="px-6 py-12 text-center text-slate-400">Không tìm thấy danh mục nào.</td>
+                </tr>
+              ) : (
+                categories.map((cat) => (
+                  <tr key={cat.id} className="hover:bg-slate-50/50 transition-colors">
+                    <td className="px-6 py-4">
+                      <code className="text-xs bg-slate-100 px-2 py-1 rounded text-slate-600">{cat.slug}</code>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="font-semibold text-slate-900">{cat.name}</div>
+                      <div className="text-xs text-slate-500 line-clamp-1 truncate max-w-[200px]">{cat.description}</div>
+                    </td>
+                    <td className="px-6 py-4 text-sm text-slate-600">
+                      {cat._count?.products || 0}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-slate-600">
+                      {format(new Date(cat.createdAt), "dd/MM/yyyy")}
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <div className="flex justify-end gap-2">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 text-blue-600 hover:bg-blue-50"
+                          onClick={() => {
+                            setEditingId(cat.id);
+                            setFormData({
+                              name: cat.name,
+                              slug: cat.slug,
+                              description: cat.description || "",
+                            });
+                            setDialogOpen(true);
+                          }}
+                        >
+                          <Edit className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 text-red-600 hover:bg-red-50"
+                          onClick={() => handleDelete(cat.id)}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
         </div>
       </main>
     </div>
