@@ -29,3 +29,5 @@ dist-ssr
 .next
 .env
 /generated/prisma
+
+public/uploads/*

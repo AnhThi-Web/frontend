@@ -274,9 +274,25 @@ export default function ProductsPage() {
                     </div>
                     <div className="space-y-2">
                         <label className="text-sm font-medium">Ảnh Đại Diện</label>
-                        <div className="flex gap-2">
-                           <Input type="file" onChange={handleImageUpload} disabled={uploading} className="cursor-pointer" />
-                           {formData.imageUrl && <div className="h-10 w-10 shrink-0 border rounded-md overflow-hidden bg-slate-100"><img src={formData.imageUrl} className="w-full h-full object-cover" /></div>}
+                        <div className="space-y-3">
+                          {formData.imageUrl && (
+                            <div className="relative w-full h-48 border rounded-lg overflow-hidden bg-slate-50">
+                              <img src={formData.imageUrl} alt="Product" className="w-full h-full object-contain" />
+                              <button
+                                type="button"
+                                onClick={() => setFormData(prev => ({ ...prev, imageUrl: '' }))}
+                                className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs"
+                              >✕</button>
+                            </div>
+                          )}
+                          <Input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleImageUpload}
+                            disabled={uploading}
+                            className="cursor-pointer"
+                          />
+                          {uploading && <p className="text-xs text-slate-500">Đang tải ảnh lên...</p>}
                         </div>
                     </div>
                   </div>
@@ -299,6 +315,31 @@ export default function ProductsPage() {
                         onChange={(val) => setFormData({ ...formData, details: val })}
                         className="h-[250px]"
                       />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Đặc Điểm Nổi Bật</label>
+                      <Textarea
+                        value={formData.features}
+                        onChange={(e) => setFormData({ ...formData, features: e.target.value })}
+                        placeholder={`VD (mỗi dòng một điểm):\nChống ăn mòn cao\nBền màu lâu dài\nAn toàn môi trường`}
+                        rows={6}
+                        className="resize-none text-sm"
+                      />
+                      <p className="text-xs text-slate-400">Mỗi dòng là một đặc điểm nổi bật</p>
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Thông Số Kỹ Thuật</label>
+                      <Textarea
+                        value={formData.specs}
+                        onChange={(e) => setFormData({ ...formData, specs: e.target.value })}
+                        placeholder={`VD (mỗi dòng một thông số):\nNhiệt độ: 20-30°C\npH: 6.5-7.5\nMật độ dòng: 1-3 A/dm²`}
+                        rows={6}
+                        className="resize-none text-sm"
+                      />
+                      <p className="text-xs text-slate-400">Mỗi dòng là một thông số kỹ thuật</p>
                     </div>
                   </div>
 
@@ -327,6 +368,7 @@ export default function ProductsPage() {
               <tr className="bg-slate-50 border-b border-slate-200">
                 <th className="px-6 py-4 font-semibold text-slate-600">Sản Phẩm</th>
                 <th className="px-6 py-4 font-semibold text-slate-600">Danh Mục</th>
+                <th className="px-6 py-4 font-semibold text-slate-600">Đặc Điểm / Thông Số</th>
                 <th className="px-6 py-4 font-semibold text-slate-600">Ngày Tạo</th>
                 <th className="px-6 py-4 font-semibold text-slate-600 text-right">Thao Tác</th>
               </tr>
@@ -334,11 +376,11 @@ export default function ProductsPage() {
             <tbody className="divide-y divide-slate-100">
               {loading ? (
                 <tr>
-                  <td colSpan={4} className="px-6 py-12 text-center text-slate-400">Đang tải dữ liệu...</td>
+                  <td colSpan={5} className="px-6 py-12 text-center text-slate-400">Đang tải dữ liệu...</td>
                 </tr>
               ) : products.length === 0 ? (
                 <tr>
-                  <td colSpan={4} className="px-6 py-12 text-center text-slate-400">Không tìm thấy sản phẩm nào.</td>
+                  <td colSpan={5} className="px-6 py-12 text-center text-slate-400">Không tìm thấy sản phẩm nào.</td>
                 </tr>
               ) : (
                 products.map((product) => (
@@ -362,6 +404,26 @@ export default function ProductsPage() {
                        <span className="bg-blue-50 text-blue-700 px-2 py-1 rounded-md text-xs font-medium">
                         {product.category?.name || "N/A"}
                        </span>
+                    </td>
+                    <td className="px-6 py-4 max-w-[220px]">
+                      {product.features ? (
+                        <div className="space-y-1">
+                          {product.features.split('\n').slice(0, 2).map((f, i) => (
+                            <div key={i} className="text-xs text-slate-600 flex items-start gap-1">
+                              <span className="text-green-500 mt-0.5">✓</span>
+                              <span className="line-clamp-1">{f}</span>
+                            </div>
+                          ))}
+                          {product.features.split('\n').length > 2 && (
+                            <span className="text-xs text-slate-400">+{product.features.split('\n').length - 2} thêm</span>
+                          )}
+                        </div>
+                      ) : (
+                        <span className="text-xs text-slate-400">—</span>
+                      )}
+                      {product.specs && (
+                        <div className="mt-2 text-xs text-slate-500 line-clamp-1">📋 {product.specs.split('\n')[0]}</div>
+                      )}
                     </td>
                     <td className="px-6 py-4 text-slate-600">
                       {format(new Date(product.createdAt), "dd/MM/yyyy")}

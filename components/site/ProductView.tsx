@@ -9,16 +9,21 @@ import { cn } from "@/lib/utils";
 export default function ProductView({ product, relatedProducts }: { product: any, relatedProducts: any[] }) {
   const [activeTab, setActiveTab] = useState("info");
 
-  // Parse JSON fields if they are strings
-  let features = [];
-  try {
-    features = typeof product.features === 'string' ? JSON.parse(product.features) : (product.features || []);
-  } catch (e) {}
+  // Parse features: plain text, one per line
+  const features: string[] = typeof product.features === 'string' && product.features.trim()
+    ? product.features.split('\n').map((s: string) => s.trim()).filter(Boolean)
+    : [];
 
-  let specs = {};
-  try {
-    specs = typeof product.specs === 'string' ? JSON.parse(product.specs) : (product.specs || {});
-  } catch (e) {}
+  // Parse specs: plain text, one per line, format "Key: Value"
+  const specLines: { key: string; value: string }[] = typeof product.specs === 'string' && product.specs.trim()
+    ? product.specs.split('\n').map((line: string) => {
+        const colonIdx = line.indexOf(':');
+        if (colonIdx > -1) {
+          return { key: line.slice(0, colonIdx).trim(), value: line.slice(colonIdx + 1).trim() };
+        }
+        return { key: line.trim(), value: '' };
+      }).filter(l => l.key)
+    : [];
 
   return (
     <div className="bg-white min-h-screen">
@@ -56,6 +61,28 @@ export default function ProductView({ product, relatedProducts }: { product: any
                 <div dangerouslySetInnerHTML={{ __html: product.details || "" }} />
               </div>
 
+              {/* Quick features preview */}
+              {features.length > 0 && (
+                <div className="mb-8 bg-gray-50 border border-gray-100 rounded-lg p-6">
+                  <h4 className="font-oswald uppercase font-bold text-sm tracking-wider text-gray-700 mb-4 flex items-center gap-2">
+                    <CheckCircle2 size={16} className="text-primary" /> Đặc điểm nổi bật
+                  </h4>
+                  <ul className="space-y-2">
+                    {features.slice(0, 4).map((f, i) => (
+                      <li key={i} className="flex items-start gap-2 text-sm text-gray-600">
+                        <span className="text-primary mt-0.5 shrink-0">✓</span>
+                        <span>{f}</span>
+                      </li>
+                    ))}
+                    {features.length > 4 && (
+                      <li className="text-xs text-primary font-medium mt-1 cursor-pointer" onClick={() => setActiveTab('info')}>
+                        + {features.length - 4} đặc điểm nữa →
+                      </li>
+                    )}
+                  </ul>
+                </div>
+              )}
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
                 <div className="flex items-center gap-4 bg-gray-50 p-4 border border-gray-100">
                   <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center text-primary shrink-0"><CheckCircle2 size={24} /></div>
@@ -84,43 +111,49 @@ export default function ProductView({ product, relatedProducts }: { product: any
         </div>
       </section>
 
+      {(features.length > 0 || specLines.length > 0) && (
       <section className="py-20 bg-gray-50 border-y border-gray-100">
         <div className="container px-4">
           <div className="max-w-4xl mx-auto">
             <div className="flex border-b border-gray-200 mb-8 overflow-x-auto">
-              <button onClick={() => setActiveTab("info")} className={cn("px-8 py-4 font-oswald uppercase text-sm tracking-widest transition-all relative shrink-0", activeTab === "info" ? "text-primary font-bold" : "text-gray-400 hover:text-gray-600")}>
-                Đặc điểm nổi bật
-                {activeTab === "info" && <div className="absolute bottom-0 left-0 w-full h-1 bg-primary" />}
-              </button>
-              <button onClick={() => setActiveTab("specs")} className={cn("px-8 py-4 font-oswald uppercase text-sm tracking-widest transition-all relative shrink-0", activeTab === "specs" ? "text-primary font-bold" : "text-gray-400 hover:text-gray-600")}>
-                Thông số kỹ thuật
-                {activeTab === "specs" && <div className="absolute bottom-0 left-0 w-full h-1 bg-primary" />}
-              </button>
+              {features.length > 0 && (
+                <button onClick={() => setActiveTab("info")} className={cn("px-8 py-4 font-oswald uppercase text-sm tracking-widest transition-all relative shrink-0", activeTab === "info" ? "text-primary font-bold" : "text-gray-400 hover:text-gray-600")}>
+                  Đặc điểm nổi bật
+                  {activeTab === "info" && <div className="absolute bottom-0 left-0 w-full h-1 bg-primary" />}
+                </button>
+              )}
+              {specLines.length > 0 && (
+                <button onClick={() => setActiveTab("specs")} className={cn("px-8 py-4 font-oswald uppercase text-sm tracking-widest transition-all relative shrink-0", activeTab === "specs" ? "text-primary font-bold" : "text-gray-400 hover:text-gray-600")}>
+                  Thông số kỹ thuật
+                  {activeTab === "specs" && <div className="absolute bottom-0 left-0 w-full h-1 bg-primary" />}
+                </button>
+              )}
             </div>
 
             <div className="bg-white p-8 md:p-12 border border-gray-100 shadow-sm min-h-[300px]">
-              {activeTab === "info" && (
+              {activeTab === "info" && features.length > 0 && (
                 <div className="animate-in fade-in duration-500">
                   <h3 className="font-oswald text-2xl uppercase font-bold mb-6 text-primary flex items-center gap-3">Ưu điểm của sản phẩm</h3>
                   <ul className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {features.map((feature: string, idx: number) => (
+                    {features.map((feature, idx) => (
                       <li key={idx} className="flex gap-4">
-                        <CheckCircle2 size={20} className="text-primary shrink-0 mt-1" /><span className="text-gray-700 leading-relaxed">{feature}</span>
+                        <CheckCircle2 size={20} className="text-primary shrink-0 mt-1" />
+                        <span className="text-gray-700 leading-relaxed">{feature}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
               )}
-              {activeTab === "specs" && (
+              {activeTab === "specs" && specLines.length > 0 && (
                 <div className="animate-in fade-in duration-500">
                   <h3 className="font-oswald text-2xl uppercase font-bold mb-6 text-primary">Thông số vận hành tiêu chuẩn</h3>
                   <div className="overflow-hidden border border-gray-100 rounded-lg">
                     <table className="w-full text-left">
                       <tbody className="divide-y divide-gray-100">
-                        {Object.entries(specs || {}).map(([key, value]) => (
-                          <tr key={key} className="hover:bg-gray-50 transition-colors">
-                            <th className="px-6 py-4 bg-gray-50 font-bold text-sm text-gray-700 w-1/3 uppercase tracking-wider">{key}</th>
-                            <td className="px-6 py-4 text-sm text-gray-600">{value as string}</td>
+                        {specLines.map(({ key, value }, idx) => (
+                          <tr key={idx} className={idx % 2 === 0 ? "bg-white hover:bg-gray-50 transition-colors" : "bg-gray-50/50 hover:bg-gray-50 transition-colors"}>
+                            <th className="px-6 py-4 font-bold text-sm text-gray-700 w-2/5 uppercase tracking-wider">{key}</th>
+                            <td className="px-6 py-4 text-sm text-gray-600">{value || '—'}</td>
                           </tr>
                         ))}
                       </tbody>
@@ -132,6 +165,7 @@ export default function ProductView({ product, relatedProducts }: { product: any
           </div>
         </div>
       </section>
+      )}
 
       {relatedProducts.length > 0 && (
         <section className="py-24">
