@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Providers } from "../../providers";
 import "../../globals.css";
-import { AdminSidebar } from "@/components/admin/Sidebar";
+import { AdminLayoutClient } from "@/components/admin/AdminLayoutClient";
 
 export const metadata: Metadata = {
   title: "ANH THI Admin Dashboard",
@@ -17,14 +17,9 @@ export default function AdminLayout({
     <html lang="vi">
       <body className="bg-slate-50 antialiased">
         <Providers>
-          <div className="flex min-h-screen">
-            <AdminSidebar />
-            <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-              <main className="flex-1 overflow-y-auto">
-                {children}
-              </main>
-            </div>
-          </div>
+          <AdminLayoutClient>
+            {children}
+          </AdminLayoutClient>
         </Providers>
       </body>
     </html>
