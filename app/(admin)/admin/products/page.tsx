@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/select";
 import dynamic from "next/dynamic";
 import slugify from "slugify";
+import { Pagination } from "@/components/admin/Pagination";
 
 // Dynamically import ReactQuill to avoid SSR issues
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
@@ -56,6 +57,10 @@ export default function ProductsPage() {
   const [error, setError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategoryId, setSelectedCategoryId] = useState("all");
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [total, setTotal] = useState(0);
+  const PAGE_SIZE = 20;
   const [uploading, setUploading] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -72,13 +77,15 @@ export default function ProductsPage() {
 
   useEffect(() => {
     fetchData();
-  }, [searchTerm, selectedCategoryId]);
+  }, [searchTerm, selectedCategoryId, page]);
 
   async function fetchData() {
     try {
       const productUrl = new URL("/api/admin/products", window.location.origin);
       if (searchTerm) productUrl.searchParams.append("search", searchTerm);
       if (selectedCategoryId !== "all") productUrl.searchParams.append("categoryId", selectedCategoryId);
+      productUrl.searchParams.append("page", String(page));
+      productUrl.searchParams.append("pageSize", String(PAGE_SIZE));
 
       const [productsRes, categoriesRes] = await Promise.all([
         fetch(productUrl.toString()),
@@ -87,8 +94,12 @@ export default function ProductsPage() {
 
       if (!productsRes.ok || !categoriesRes.ok) throw new Error("Failed to fetch");
 
-      setProducts(await productsRes.json());
-      setCategories(await categoriesRes.json());
+      const productsJson = await productsRes.json();
+      const categoriesJson = await categoriesRes.json();
+      setProducts(productsJson.data ?? productsJson);
+      setTotalPages(productsJson.totalPages ?? 1);
+      setTotal(productsJson.total ?? 0);
+      setCategories(categoriesJson.data ?? categoriesJson);
     } catch (err) {
       setError("Lỗi khi tải dữ liệu");
     } finally {
@@ -467,6 +478,13 @@ export default function ProductsPage() {
             </tbody>
           </table>
         </div>
+        <Pagination
+          page={page}
+          totalPages={totalPages}
+          total={total}
+          pageSize={PAGE_SIZE}
+          onPageChange={setPage}
+        />
       </main>
     </div>
   );

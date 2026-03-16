@@ -17,6 +17,7 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import { format } from "date-fns";
 import slugify from "slugify";
+import { Pagination } from "@/components/admin/Pagination";
 
 // Dynamically import ReactQuill
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
@@ -38,6 +39,10 @@ export default function NewsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [total, setTotal] = useState(0);
+  const PAGE_SIZE = 20;
   const [uploading, setUploading] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -52,16 +57,20 @@ export default function NewsPage() {
 
   useEffect(() => {
     fetchNews();
-  }, [searchTerm]);
+  }, [searchTerm, page]);
 
   async function fetchNews() {
     try {
-      const url = searchTerm 
-        ? `/api/admin/news?search=${encodeURIComponent(searchTerm)}` 
-        : "/api/admin/news";
-      const res = await fetch(url);
+      const url = new URL("/api/admin/news", window.location.origin);
+      if (searchTerm) url.searchParams.set("search", searchTerm);
+      url.searchParams.set("page", String(page));
+      url.searchParams.set("pageSize", String(PAGE_SIZE));
+      const res = await fetch(url.toString());
       if (!res.ok) throw new Error("Failed to fetch");
-      setNews(await res.json());
+      const json = await res.json();
+      setNews(json.data ?? json);
+      setTotalPages(json.totalPages ?? 1);
+      setTotal(json.total ?? 0);
     } catch (err) {
       setError("Lỗi khi tải tin tức");
     } finally {
@@ -348,6 +357,13 @@ export default function NewsPage() {
             </tbody>
           </table>
         </div>
+        <Pagination
+          page={page}
+          totalPages={totalPages}
+          total={total}
+          pageSize={PAGE_SIZE}
+          onPageChange={setPage}
+        />
       </main>
     </div>
   );

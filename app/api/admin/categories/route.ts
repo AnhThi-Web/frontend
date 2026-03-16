@@ -23,18 +23,33 @@ export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
     const search = searchParams.get("search") || "";
+    const page = Math.max(1, parseInt(searchParams.get("page") || "1", 10));
+    const pageSize = Math.max(1, parseInt(searchParams.get("pageSize") || "20", 10));
 
-    const categories = await db.category.findMany({
-      where: search ? {
-        OR: [
-          { name: { contains: search } },
-          { description: { contains: search } },
-        ],
-      } : {},
-      include: { _count: { select: { products: true } } },
-      orderBy: { createdAt: "desc" },
+    const where = search ? {
+      OR: [
+        { name: { contains: search } },
+        { description: { contains: search } },
+      ],
+    } : {};
+
+    const [categories, total] = await Promise.all([
+      db.category.findMany({
+        where,
+        include: { _count: { select: { products: true } } },
+        orderBy: { createdAt: "desc" },
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+      }),
+      db.category.count({ where }),
+    ]);
+
+    return NextResponse.json({
+      data: categories,
+      total,
+      page,
+      totalPages: Math.ceil(total / pageSize),
     });
-    return NextResponse.json(categories);
   } catch (error) {
     return NextResponse.json(
       { error: "Failed to fetch categories" },

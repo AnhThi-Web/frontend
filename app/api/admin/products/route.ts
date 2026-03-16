@@ -29,27 +29,38 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const search = searchParams.get("search") || "";
     const categoryId = searchParams.get("categoryId") || "";
+    const page = Math.max(1, parseInt(searchParams.get("page") || "1", 10));
+    const pageSize = Math.max(1, parseInt(searchParams.get("pageSize") || "20", 10));
 
-    const products = await db.product.findMany({
-      where: {
-        AND: [
-          search ? {
-            OR: [
-              { name: { contains: search } },
-              { description: { contains: search } },
-            ],
-          } : {},
-          categoryId ? { categoryId } : {},
-        ],
-      },
-      include: {
-        category: true,
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
+    const where = {
+      AND: [
+        search ? {
+          OR: [
+            { name: { contains: search } },
+            { description: { contains: search } },
+          ],
+        } : {},
+        categoryId ? { categoryId } : {},
+      ],
+    };
+
+    const [products, total] = await Promise.all([
+      db.product.findMany({
+        where,
+        include: { category: true },
+        orderBy: { createdAt: "desc" },
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+      }),
+      db.product.count({ where }),
+    ]);
+
+    return NextResponse.json({
+      data: products,
+      total,
+      page,
+      totalPages: Math.ceil(total / pageSize),
     });
-    return NextResponse.json(products);
   } catch (error) {
     return NextResponse.json(
       { error: "Failed to fetch products" },

@@ -15,6 +15,7 @@ import {
 import { Edit, Trash2, Plus, ArrowLeft, Search } from "lucide-react";
 import Link from "next/link";
 import { Textarea } from "@/components/ui/textarea";
+import { Pagination } from "@/components/admin/Pagination";
 
 import { AdminHeader } from "@/components/admin/Header";
 import { format } from "date-fns";
@@ -33,6 +34,10 @@ export default function CategoriesPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [total, setTotal] = useState(0);
+  const PAGE_SIZE = 20;
   const [editingId, setEditingId] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [formData, setFormData] = useState({
@@ -43,17 +48,20 @@ export default function CategoriesPage() {
 
   useEffect(() => {
     fetchCategories();
-  }, [searchTerm]);
+  }, [searchTerm, page]);
 
   async function fetchCategories() {
     try {
-      const url = searchTerm 
-        ? `/api/admin/categories?search=${encodeURIComponent(searchTerm)}` 
-        : "/api/admin/categories";
-      const res = await fetch(url);
+      const url = new URL("/api/admin/categories", window.location.origin);
+      if (searchTerm) url.searchParams.set("search", searchTerm);
+      url.searchParams.set("page", String(page));
+      url.searchParams.set("pageSize", String(PAGE_SIZE));
+      const res = await fetch(url.toString());
       if (!res.ok) throw new Error("Failed to fetch");
-      const data = await res.json();
-      setCategories(data);
+      const json = await res.json();
+      setCategories(json.data ?? json);
+      setTotalPages(json.totalPages ?? 1);
+      setTotal(json.total ?? 0);
     } catch (err) {
       setError("Lỗi khi tải danh mục");
     } finally {
@@ -266,6 +274,13 @@ export default function CategoriesPage() {
             </tbody>
           </table>
         </div>
+        <Pagination
+          page={page}
+          totalPages={totalPages}
+          total={total}
+          pageSize={PAGE_SIZE}
+          onPageChange={setPage}
+        />
       </main>
     </div>
   );

@@ -26,24 +26,38 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const published = searchParams.get("published");
     const search = searchParams.get("search") || "";
+    const page = Math.max(1, parseInt(searchParams.get("page") || "1", 10));
+    const pageSize = Math.max(1, parseInt(searchParams.get("pageSize") || "20", 10));
 
-    const news = await db.news.findMany({
-      where: {
-        AND: [
-          published ? { published: published === "true" } : {},
-          search ? {
-            OR: [
-              { title: { contains: search } },
-              { content: { contains: search } },
-              { excerpt: { contains: search } },
-            ],
-          } : {},
-        ],
-      },
-      orderBy: { createdAt: "desc" },
+    const where = {
+      AND: [
+        published ? { published: published === "true" } : {},
+        search ? {
+          OR: [
+            { title: { contains: search } },
+            { content: { contains: search } },
+            { excerpt: { contains: search } },
+          ],
+        } : {},
+      ],
+    };
+
+    const [news, total] = await Promise.all([
+      db.news.findMany({
+        where,
+        orderBy: { createdAt: "desc" },
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+      }),
+      db.news.count({ where }),
+    ]);
+
+    return NextResponse.json({
+      data: news,
+      total,
+      page,
+      totalPages: Math.ceil(total / pageSize),
     });
-
-    return NextResponse.json(news);
   } catch (error) {
     return NextResponse.json(
       { error: "Failed to fetch news" },

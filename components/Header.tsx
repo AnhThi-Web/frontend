@@ -35,7 +35,10 @@ export const Header = () => {
   useEffect(() => {
     fetch("/api/admin/categories")
       .then((res) => res.json())
-      .then((data: Category[]) => setCategories(data.slice(0, 10)))
+      .then((json) => {
+        const list = Array.isArray(json) ? json : (json.data ?? []);
+        setCategories(list.slice(0, 10));
+      })
       .catch(() => {});
   }, []);
 
