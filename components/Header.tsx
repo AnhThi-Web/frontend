@@ -1,28 +1,26 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Menu, X, Phone, Mail, Globe, ChevronDown, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-const menuItems = [
+interface Category {
+  id: string;
+  name: string;
+  slug: string;
+}
+
+interface MenuItem {
+  name: string;
+  path: string;
+  subItems?: { name: string; path: string }[];
+}
+
+const staticMenuItems = [
   { name: "Trang chủ", path: "/" },
   { name: "Giới thiệu", path: "/gioi-thieu" },
-  { 
-    name: "Sản phẩm", 
-    path: "/danh-muc-san-pham",
-    subItems: [
-      { name: "CHẤT TẨY RỬA", path: "/chat-tay-rua" },
-      { name: "MẠ KẼM", path: "/ma-kem" },
-      { name: "MẠ ĐỒNG", path: "/ma-dong" },
-      { name: "MẠ NIKEN", path: "/ma-niken" },
-      { name: "MẠ CRÔM", path: "/ma-crom" },
-      { name: "HOÀN THIỆN BỀ MẶT NHÔM", path: "/hoan-thien-be-mat-nhom" },
-      { name: "MẠ TRÊN NỀN NHỰA", path: "/ma-tren-nen-nhua" },
-      { name: "CHỐNG ĂN MÒN", path: "/chong-an-mon" },
-    ]
-  },
   { name: "Tin tức", path: "/tin-tuc" },
   { name: "Thư viện ảnh", path: "/thu-vien-anh" },
   { name: "Liên hệ", path: "/lien-he" },
@@ -32,6 +30,30 @@ export const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null);
   const [hoveredMenu, setHoveredMenu] = useState<string | null>(null);
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  useEffect(() => {
+    fetch("/api/admin/categories")
+      .then((res) => res.json())
+      .then((data: Category[]) => setCategories(data.slice(0, 10)))
+      .catch(() => {});
+  }, []);
+
+  const menuItems: MenuItem[] = [
+    { name: "Trang chủ", path: "/" },
+    { name: "Giới thiệu", path: "/gioi-thieu" },
+    {
+      name: "Sản phẩm",
+      path: "/danh-muc-san-pham",
+      subItems: categories.length > 0
+        ? categories.map((cat) => ({
+            name: cat.name.toUpperCase(),
+            path: `/${cat.slug}`,
+          }))
+        : [],
+    },
+    ...staticMenuItems.slice(2),
+  ];
 
   return (
     <header className="w-full">
@@ -43,9 +65,9 @@ export const Header = () => {
               <Phone size={14} />
               <span>0272.375.9664</span>
             </a>
-            <a href="mailto:info@mitekvn.com" className="flex items-center gap-2 hover:text-secondary transition-colors">
+            <a href="mailto:info@anhthi.com" className="flex items-center gap-2 hover:text-secondary transition-colors">
               <Mail size={14} />
-              <span>info@mitekvn.com</span>
+              <span>info@anhthi.com</span>
             </a>
           </div>
           <div className="flex items-center gap-4">
