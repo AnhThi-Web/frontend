@@ -19,7 +19,7 @@ export default function About() {
           <nav className="flex items-center gap-2 text-sm text-white/80 uppercase font-oswald tracking-wider">
             <Link href="/" className="hover:text-secondary transition-colors">Trang chủ</Link>
             <ChevronRight size={14} />
-            <span className="text-secondary font-medium">Giới thiệu về MITEK</span>
+            <span className="text-secondary font-medium">Giới thiệu về ANH THI</span>
           </nav>
         </div>
       </section>
@@ -32,8 +32,8 @@ export default function About() {
               <div className="relative">
                 <div className="absolute -top-10 -left-10 w-40 h-40 bg-secondary/10 -z-0 rounded-full" />
                 <img 
-                  src="https://bizweb.dktcdn.net/100/424/639/themes/823315/assets/image-abouts.png?1763658688907" 
-                  alt="Nhà máy MITEK" 
+                  src="/assets/congty.jpg" 
+                  alt="Nhà máy ANH THI" 
                   className="w-full h-auto relative z-10 shadow-2xl"
                 />
                 <div className="absolute -bottom-6 -right-6 bg-primary text-white p-6 md:p-8 z-20 shadow-xl hidden md:block max-w-[240px]">
@@ -45,14 +45,14 @@ export default function About() {
             <div className="lg:w-1/2">
               <span className="text-primary font-oswald uppercase tracking-[0.2em] font-bold mb-4 block">Về chúng tôi</span>
               <h2 className="text-3xl md:text-5xl font-oswald uppercase font-bold mb-8 leading-tight">
-                MITEK - TIÊN PHONG TRONG GIẢI PHÁP <span className="text-primary">XI MẠ XANH</span>
+                ANH THI - TIÊN PHONG TRONG GIẢI PHÁP <span className="text-primary">XI MẠ XANH</span>
               </h2>
               <div className="space-y-6 text-gray-600 leading-relaxed text-lg">
                 <p>
-                  <strong>MITEK</strong> là doanh nghiệp sản xuất và kinh doanh hóa chất phụ gia đặc chủng, tọa lạc tại KCN Xuyên Á, xã Đức Lập, tỉnh Tây Ninh, Việt Nam. Chúng tôi tự hào sở hữu nhà máy hiện đại với công suất <strong>4.000 tấn/năm</strong> cùng kho chứa <strong>1.500 tấn</strong>, vận hành nghiêm ngặt theo các tiêu chuẩn an toàn và môi trường quốc tế.
+                  <strong>ANH THI</strong> là doanh nghiệp sản xuất và kinh doanh hóa chất phụ gia đặc chủng, tọa lạc tại Khu liên cơ Vân Hồ - 52 Lê Đại Hành, Hai Bà Trưng, Hà Nội, Việt Nam. Chúng tôi tự hào sở hữu nhà máy hiện đại với công suất <strong>4.000 tấn/năm</strong> cùng kho chứa <strong>1.500 tấn</strong>, vận hành nghiêm ngặt theo các tiêu chuẩn an toàn và môi trường quốc tế.
                 </p>
                 <p>
-                  Được dẫn dắt bởi đội ngũ chuyên gia giàu kinh nghiệm trong lĩnh vực hoàn thiện bề mặt kim loại, MITEK cam kết mang đến những giải pháp công nghệ ưu việt, không ngừng đổi mới để đáp ứng nhu cầu khắt khe của ngành công nghiệp phụ trợ tại Việt Nam và khu vực.
+                  Được dẫn dắt bởi đội ngũ chuyên gia giàu kinh nghiệm trong lĩnh vực hoàn thiện bề mặt kim loại, ANH THI cam kết mang đến những giải pháp công nghệ ưu việt, không ngừng đổi mới để đáp ứng nhu cầu khắt khe của ngành công nghiệp phụ trợ tại Việt Nam và khu vực.
                 </p>
                 <p>
                   Với phòng thí nghiệm hiện đại và đội ngũ kỹ sư tận tâm, chúng tôi không chỉ cung cấp sản phẩm mà còn đồng hành cùng khách hàng trong việc tối ưu hóa quy trình, giảm thiểu tác động môi trường thông qua các sản phẩm sản xuất "xanh".
@@ -84,7 +84,7 @@ export default function About() {
               </div>
               <h3 className="text-3xl font-oswald uppercase font-bold mb-6 relative z-10">Sứ mệnh</h3>
               <p className="text-gray-600 leading-relaxed text-lg relative z-10">
-                Kiến tạo môi trường kinh doanh minh bạch, phát huy tối đa nguồn lực cho sự phát triển bền vững. MITEK cam kết cung cấp các sản phẩm phụ gia và tư vấn công nghệ theo hướng an toàn môi trường, đảm bảo hiệu quả kinh tế cao nhất cho khách hàng.
+                Kiến tạo môi trường kinh doanh minh bạch, phát huy tối đa nguồn lực cho sự phát triển bền vững. ANH THI cam kết cung cấp các sản phẩm phụ gia và tư vấn công nghệ theo hướng an toàn môi trường, đảm bảo hiệu quả kinh tế cao nhất cho khách hàng.
               </p>
             </div>
           </div>
@@ -138,7 +138,7 @@ export default function About() {
       {/* Commitment Section */}
       <section className="bg-primary py-24 text-white">
         <div className="container px-4 text-center">
-          <h2 className="text-3xl md:text-5xl font-oswald uppercase font-bold mb-12 italic">Cam kết từ MITEK</h2>
+          <h2 className="text-3xl md:text-5xl font-oswald uppercase font-bold mb-12 italic">Cam kết từ ANH THI</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-5xl mx-auto">
             <div className="space-y-4">
               <h4 className="text-secondary font-oswald uppercase text-xl font-bold">Công nghệ ưu việt</h4>

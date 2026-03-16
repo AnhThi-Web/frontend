@@ -31,7 +31,7 @@ export function AdminSidebar() {
       <div className="p-6 border-b border-slate-800">
         <h1 className="text-xl font-bold tracking-tight text-primary flex items-center gap-2">
           <Settings className="w-6 h-6" />
-          MITEK ADMIN
+          ANH THI ADMIN
         </h1>
       </div>
 

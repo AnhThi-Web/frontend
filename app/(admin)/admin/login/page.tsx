@@ -47,7 +47,7 @@ export default function AdminLoginPage() {
             Đăng Nhập Admin
           </h1>
           <p className="text-gray-500 text-center mb-8">
-            MITEK VIETNAM Management
+            ANH THI Management
           </p>
 
           {error && (
@@ -66,7 +66,7 @@ export default function AdminLoginPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@mitek.com"
+                placeholder="admin@anhthi.com"
                 required
               />
             </div>
@@ -94,7 +94,7 @@ export default function AdminLoginPage() {
           </form>
 
           <p className="text-xs text-gray-500 text-center mt-6">
-            Demo: admin@mitek.com / password123
+            Demo: admin@anhthi.com / password123
           </p>
         </div>
       </div>

@@ -4,10 +4,10 @@ import { Providers } from "../providers";
 import "../globals.css";
 
 export const metadata: Metadata = {
-  title: "MITEK VIETNAM - Hóa chất xi mạ và hoàn thiện bề mặt",
-  description: "MITEK chuyên cung cấp các giải pháp hóa chất xi mạ, mạ kẽm, đồng, niken, crôm và hoàn thiện bề mặt kim loại chất lượng cao.",
+  title: "ANH THI - Hóa chất xi mạ và hoàn thiện bề mặt",
+  description: "ANH THI chuyên cung cấp các giải pháp hóa chất xi mạ, mạ kẽm, đồng, niken, crôm và hoàn thiện bề mặt kim loại chất lượng cao.",
   icons: {
-    icon: "https://bizweb.dktcdn.net/100/424/639/themes/823315/assets/favicon.png?1763658688907",
+    icon: "/assets/logo.png",
   }
 };
 

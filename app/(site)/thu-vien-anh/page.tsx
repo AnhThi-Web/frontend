@@ -19,7 +19,7 @@ export default function GalleryPage() {
           <nav className="flex items-center gap-2 text-sm text-white/80 uppercase font-oswald tracking-wider">
             <Link href="/" className="hover:text-secondary transition-colors">Trang chủ</Link>
             <ChevronRight size={14} />
-            <span className="text-secondary font-medium">Thư viện ảnh MITEK</span>
+            <span className="text-secondary font-medium">Thư viện ảnh ANH THI</span>
           </nav>
         </div>
       </section>

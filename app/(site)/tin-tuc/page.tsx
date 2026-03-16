@@ -50,7 +50,7 @@ export default async function News() {
                     </div>
                     <div className="p-8 flex-grow flex flex-col">
                       <div className="flex items-center gap-4 text-xs text-gray-400 mb-4 uppercase tracking-wider font-bold">
-                        <span className="flex items-center gap-1.5"><User size={14} className="text-primary" /> MITEK Admin</span>
+                        <span className="flex items-center gap-1.5"><User size={14} className="text-primary" /> ANH THI Admin</span>
                         <span className="flex items-center gap-1.5"><Calendar size={14} className="text-primary" /> {new Date(news.createdAt).toLocaleDateString('vi-VN')}</span>
                       </div>
                       <h3 className="text-xl font-oswald font-bold uppercase mb-4 leading-snug group-hover:text-primary transition-colors line-clamp-2">
@@ -139,7 +139,7 @@ export default async function News() {
                 <div className="bg-gray-50 p-8 border border-gray-100">
                   <h4 className="font-oswald uppercase font-bold text-lg mb-6 border-l-4 border-primary pl-4">Tags</h4>
                   <div className="flex flex-wrap gap-2">
-                    {["MITEK", "Xi mạ", "VIIF 2025", "Công nghệ", "Môi trường", "Hội thảo"].map((tag) => (
+                    {["ANH THI", "Xi mạ", "VIIF 2025", "Công nghệ", "Môi trường", "Hội thảo"].map((tag) => (
                       <Link 
                         key={tag} 
                         href="#" 
@@ -160,7 +160,7 @@ export default async function News() {
       <section className="bg-primary py-20 text-white">
         <div className="container px-4 flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="max-w-2xl">
-            <h2 className="text-2xl md:text-3xl font-oswald uppercase font-bold mb-4">Nhận bản tin từ MITEK</h2>
+            <h2 className="text-2xl md:text-3xl font-oswald uppercase font-bold mb-4">Nhận bản tin từ ANH THI</h2>
             <p className="opacity-80 text-sm">Đăng ký để nhận những thông tin mới nhất về công nghệ xi mạ và các sự kiện của chúng tôi.</p>
           </div>
           <div className="flex w-full md:w-auto gap-2">

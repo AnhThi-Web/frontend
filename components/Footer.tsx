@@ -10,13 +10,13 @@ export const Footer = () => {
           <div>
             <Link href="/" className="inline-block mb-6">
               <img
-                src="https://bizweb.dktcdn.net/100/424/639/themes/823315/assets/logo.png?1763658688907"
-                alt="MITEK Logo"
+                src="/assets/logo.png"
+                alt="ANH THI Logo"
                 className="h-16"
               />
             </Link>
             <p className="text-sm leading-relaxed mb-6 text-gray-700">
-              MITEK là doanh nghiệp sản xuất và kinh doanh hóa chất phụ gia đặc chủng cho ngành hoàn thiện bề mặt kim loại – xi mạ. Với nhà máy hiện đại và quy trình đạt chuẩn quốc tế.
+              ANH THI là doanh nghiệp sản xuất và kinh doanh hóa chất phụ gia đặc chủng cho ngành hoàn thiện bề mặt kim loại – xi mạ. Với nhà máy hiện đại và quy trình đạt chuẩn quốc tế.
             </p>
             <div className="flex gap-4">
               <a
@@ -66,23 +66,23 @@ export const Footer = () => {
             <ul className="space-y-4 text-sm">
               <li className="flex gap-3">
                 <MapPin className="shrink-0 text-primary" size={20} />
-                <span className="text-gray-700">Trụ sở chính: KCN Xuyên Á, Xã Đức Lập Hạ, Huyện Đức Hòa, Tỉnh Long An, Việt Nam.</span>
+                <span className="text-gray-700">Trụ sở chính: Khu liên cơ Vân Hồ - 52 Lê Đại Hành, Hai Bà Trưng, Hà Nội, Việt Nam.</span>
               </li>
               <li className="flex gap-3">
                 <Phone className="shrink-0 text-primary" size={20} />
-                <a href="tel:02723759664" className="text-gray-700 hover:text-primary transition-colors">0272.375.9664</a>
+                <a href="tel:0336680264" className="text-gray-700 hover:text-primary transition-colors">033.668.0264</a>
               </li>
               <li className="flex gap-3">
                 <Mail className="shrink-0 text-primary" size={20} />
-                <a href="mailto:info@mitekvn.com" className="text-gray-700 hover:text-primary transition-colors">info@mitekvn.com</a>
+                <a href="mailto:info@anhthi.com" className="text-gray-700 hover:text-primary transition-colors">info@anhthi.com</a>
               </li>
             </ul>
           </div>
         </div>
 
         <div className="pt-8 border-t border-gray-400 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-700">
-          <p>© 2026 CÔNG TY CỔ PHẦN GIẢI PHÁP CÔNG NGHỆ MITEK. All rights reserved.</p>
-          <p>Thiết kế bởi Sapo</p>
+          <p>© 2026 CÔNG TY CỔ PHẦN ANH THI VIET NAM. All rights reserved.</p>
+          <p>Thiết kế bởi HTB</p>
         </div>
       </div>
     </footer>

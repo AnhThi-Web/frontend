@@ -3,8 +3,8 @@ import { ContactForm } from "@/components/ContactForm";
 import { ContactInfo } from "@/components/ContactInfo";
 
 export const metadata = {
-  title: "Liên hệ - MITEK VIETNAM",
-  description: "Liên hệ với MITEK để được tư vấn kỹ thuật và nhận báo giá chi tiết.",
+  title: "Liên hệ - ANH THI VIET NAM",
+  description: "Liên hệ với ANH THI để được tư vấn kỹ thuật và nhận báo giá chi tiết.",
 };
 
 export default function Contact() {

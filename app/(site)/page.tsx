@@ -56,7 +56,7 @@ export default async function Index() {
             <div className="lg:w-1/2">
               <div className="relative">
                 <img 
-                  src="https://bizweb.dktcdn.net/100/424/639/themes/823315/assets/image-abouts.png?1763658688907" 
+                  src="/assets/congty.jpg" 
                   alt="Mitek Factory" 
                   className="w-full h-auto relative z-10"
                 />
@@ -67,15 +67,15 @@ export default async function Index() {
             <div className="lg:w-1/2">
               <span className="text-primary font-oswald uppercase tracking-widest font-bold mb-4 block">Về chúng tôi</span>
               <h2 className="text-3xl md:text-5xl mb-8 leading-tight">
-                MITEK - ĐỐI TÁC TIN CẬY TRONG LĨNH VỰC <span className="text-primary">XI MẠ</span>
+                ANH THI - ĐỐI TÁC TIN CẬY TRONG LĨNH VỰC <span className="text-primary">XI MẠ</span>
               </h2>
               <div className="space-y-6 text-gray-600 leading-relaxed">
                 <p>
-                  <strong>MITEK</strong> là doanh nghiệp sản xuất và kinh doanh hóa chất phụ gia đặc chủng cho ngành hoàn thiện bề mặt kim loại – xi mạ. 
+                  <strong>ANH THI</strong> là doanh nghiệp sản xuất và kinh doanh hóa chất phụ gia đặc chủng cho ngành hoàn thiện bề mặt kim loại – xi mạ. 
                   Tọa lạc tại KCN Xuyên Á, chúng tôi vận hành nhà máy với công suất 4.000 tấn/năm.
                 </p>
                 <p>
-                  Với đội ngũ kỹ sư giàu kinh nghiệm và sự hợp tác quốc tế, MITEK cam kết cung cấp những giải pháp công nghệ tiên tiến nhất, 
+                  Với đội ngũ kỹ sư giàu kinh nghiệm và sự hợp tác quốc tế, ANH THI cam kết cung cấp những giải pháp công nghệ tiên tiến nhất, 
                   thân thiện với môi trường và tối ưu hóa chi phí sản xuất cho khách hàng.
                 </p>
                 <ul className="space-y-3 pt-4">
@@ -159,8 +159,8 @@ export default async function Index() {
             Đội ngũ chuyên gia của chúng tôi luôn sẵn sàng hỗ trợ bạn tìm ra giải pháp tối ưu nhất cho doanh nghiệp.
           </p>
           <div className="flex flex-col md:flex-row justify-center gap-4">
-            <a href="tel:02723759664" className="bg-secondary text-primary px-8 py-4 font-oswald uppercase font-bold flex items-center justify-center gap-2 hover:bg-white transition-colors">
-              <ArrowRight className="w-5 h-5" /> Gọi ngay: 0272.375.9664
+            <a href="tel:0336680264" className="bg-secondary text-primary px-8 py-4 font-oswald uppercase font-bold flex items-center justify-center gap-2 hover:bg-white transition-colors">
+              <ArrowRight className="w-5 h-5" /> Gọi ngay: 033.668.0264
             </a>
             <Link href="/lien-he" className="bg-white/10 border border-white px-8 py-4 font-oswald uppercase font-bold flex items-center justify-center gap-2 hover:bg-white hover:text-primary transition-colors">
               Gửi yêu cầu báo giá

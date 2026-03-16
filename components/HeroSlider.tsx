@@ -19,7 +19,7 @@ interface Slide {
 const slides: Slide[] = [
   {
     id: 1,
-    image: "https://bizweb.dktcdn.net/100/424/639/themes/823315/assets/slider_1.jpg?1763658688907",
+    image: "/assets/slider1.jpg",
     title: "GIẢI PHÁP CÔNG NGHỆ",
     subtitle: "HOÀN THIỆN BỀ MẶT",
     cta1Text: "Xem sản phẩm",
@@ -29,7 +29,7 @@ const slides: Slide[] = [
   },
   {
     id: 2,
-    image: "https://bizweb.dktcdn.net/100/424/639/themes/823315/assets/slider_2.jpg?1763658688907",
+    image: "/assets/slider2.jpg",
     title: "HÓAA CHẤT XI MẠ",
     subtitle: "CHẤT LƯỢNG QUỐC TẾ",
     cta1Text: "Tìm hiểu thêm",
@@ -39,7 +39,7 @@ const slides: Slide[] = [
   },
   {
     id: 3,
-    image: "https://bizweb.dktcdn.net/100/424/639/themes/823315/assets/slider_3.jpg?1763658688907",
+    image: "/assets/slider3.jpg",
     title: "CÔNG NGHỆ TIÊN TIẾN",
     subtitle: "ĐỘI NGŨ CHUYÊN GIA",
     cta1Text: "Xem dự án",

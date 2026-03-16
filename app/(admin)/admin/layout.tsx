@@ -4,8 +4,8 @@ import "../../globals.css";
 import { AdminSidebar } from "@/components/admin/Sidebar";
 
 export const metadata: Metadata = {
-  title: "MITEK Admin Dashboard",
-  description: "Hệ thống quản trị MITEK",
+  title: "ANH THI Admin Dashboard",
+  description: "Hệ thống quản trị ANH THI",
 };
 
 export default function AdminLayout({

@@ -34,7 +34,7 @@ export default function GalleryView({ gallery }: { gallery: any }) {
                   <Calendar size={18} /> {gallery.date}
                 </span>
                 <span className="flex items-center gap-2">
-                  <User size={18} /> MITEK Admin
+                  <User size={18} /> ANH THI Admin
                 </span>
                 <span className="flex items-center gap-2">
                   <Camera size={18} /> {gallery.images.length} Ảnh

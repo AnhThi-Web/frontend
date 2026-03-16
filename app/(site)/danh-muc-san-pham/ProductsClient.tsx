@@ -120,8 +120,8 @@ export default function ProductsClient({ categories, products }: { categories: a
                 <div className="bg-primary p-6 text-white text-center">
                   <h4 className="font-oswald uppercase text-lg mb-4">Hỗ trợ tư vấn</h4>
                   <p className="text-sm opacity-80 mb-6">Liên hệ với chuyên gia của chúng tôi để được tư vấn về giải pháp xi mạ.</p>
-                  <a href="tel:02723759664" className="block bg-secondary text-primary py-3 font-bold hover:bg-white transition-colors">
-                    0272.375.9664
+                  <a href="tel:0336680264" className="block bg-secondary text-primary py-3 font-bold hover:bg-white transition-colors">
+                    033.668.0264
                   </a>
                 </div>
               </div>
@@ -218,7 +218,7 @@ export default function ProductsClient({ categories, products }: { categories: a
         <div className="container px-4 text-center max-w-3xl mx-auto">
           <h2 className="text-2xl md:text-3xl font-oswald uppercase font-bold mb-6">Bạn đang tìm kiếm sản phẩm cụ thể?</h2>
           <p className="text-gray-600 mb-10">
-            MITEK nhận đặt hàng và sản xuất các loại hóa chất phụ gia theo yêu cầu kỹ thuật riêng biệt của khách hàng. 
+            ANH THI nhận đặt hàng và sản xuất các loại hóa chất phụ gia theo yêu cầu kỹ thuật riêng biệt của khách hàng. 
             Hãy cho chúng tôi biết nhu cầu của bạn.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
@@ -227,7 +227,7 @@ export default function ProductsClient({ categories, products }: { categories: a
                 Gửi yêu cầu báo giá
               </Button>
             </Link>
-            <a href="tel:02723759664">
+            <a href="tel:0336680264">
               <Button size="lg" variant="outline" className="rounded-none px-10 h-14 font-oswald uppercase tracking-wider border-primary text-primary hover:bg-primary hover:text-white w-full sm:w-auto">
                 Liên hệ hotline
               </Button>

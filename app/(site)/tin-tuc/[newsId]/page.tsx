@@ -54,7 +54,7 @@ export default async function NewsDetail({ params }: { params: { newsId: string 
                     <Calendar size={18} /> {new Date(news.createdAt).toLocaleDateString('vi-VN')}
                   </span>
                   <span className="flex items-center gap-2">
-                    <User size={18} /> MITEK Admin
+                    <User size={18} /> ANH THI Admin
                   </span>
                   <span className="flex items-center gap-2">
                     <Share2 size={18} /> 0 Shares
@@ -122,7 +122,7 @@ export default async function NewsDetail({ params }: { params: { newsId: string 
 
                 {/* CTA Box */}
                 <div className="bg-primary p-10 text-white text-center">
-                  <h4 className="font-oswald uppercase text-xl font-bold mb-4">MITEK SOLUTIONS</h4>
+                  <h4 className="font-oswald uppercase text-xl font-bold mb-4">ANH THI SOLUTIONS</h4>
                   <p className="text-sm opacity-80 mb-8 leading-relaxed">Chúng tôi cung cấp các giải pháp công nghệ xi mạ tiên tiến và thân thiện môi trường.</p>
                   <Link href="/lien-he">
                     <Button className="bg-white text-primary hover:bg-secondary hover:text-primary font-bold w-full h-12 rounded-none uppercase font-oswald tracking-widest text-xs">

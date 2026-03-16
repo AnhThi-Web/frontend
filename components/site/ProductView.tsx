@@ -95,7 +95,7 @@ export default function ProductView({ product, relatedProducts }: { product: any
               </div>
 
               <div className="flex flex-col sm:flex-row gap-4">
-                <a href="tel:02723759664" className="flex-1">
+                <a href="tel:0336680264" className="flex-1">
                   <Button size="lg" className="w-full h-14 rounded-none font-oswald uppercase tracking-wider flex gap-2">
                     <Phone size={18} /> Liên hệ tư vấn
                   </Button>

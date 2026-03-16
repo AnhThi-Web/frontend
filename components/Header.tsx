@@ -61,9 +61,9 @@ export const Header = () => {
       <div className="bg-primary text-white py-2 px-4 hidden md:block">
         <div className="container mx-auto flex justify-between items-center text-sm">
           <div className="flex items-center gap-6">
-            <a href="tel:02723759664" className="flex items-center gap-2 hover:text-secondary transition-colors">
+            <a href="tel:0336680264" className="flex items-center gap-2 hover:text-secondary transition-colors">
               <Phone size={14} />
-              <span>0272.375.9664</span>
+              <span>033.668.0264</span>
             </a>
             <a href="mailto:info@anhthi.com" className="flex items-center gap-2 hover:text-secondary transition-colors">
               <Mail size={14} />
@@ -73,9 +73,9 @@ export const Header = () => {
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
               <Globe size={14} />
-              <button className="hover:text-secondary transition-colors font-bold">VN</button>
+              {/* <button className="hover:text-secondary transition-colors font-bold">VN</button>
               <span>|</span>
-              <button className="hover:text-secondary transition-colors">EN</button>
+              <button className="hover:text-secondary transition-colors">EN</button> */}
             </div>
             <div className="relative group">
               <button className="flex items-center gap-1 hover:text-secondary transition-colors">
@@ -92,8 +92,8 @@ export const Header = () => {
           {/* Logo */}
           <Link href="/" className="flex items-center">
             <img
-              src="https://bizweb.dktcdn.net/100/424/639/themes/823315/assets/logo.png?1763658688907"
-              alt="MITEK Logo"
+              src="/assets/logo.png"
+              alt="ANH THI Logo"
               className="h-12 md:h-16 object-contain"
             />
           </Link>

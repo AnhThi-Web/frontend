@@ -27,7 +27,7 @@ export default function AdminDashboard() {
     <div className="p-8">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-slate-900 mb-2">
-          MITEK Admin Panel
+          ANH THI Admin Panel
         </h1>
         <p className="text-slate-500">
           Xin chào, <span className="font-semibold text-primary">{session?.user?.name}</span>. Chúc bạn một ngày làm việc hiệu quả!
