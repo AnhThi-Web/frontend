@@ -75,7 +75,15 @@ export default function ProductView({ product, relatedProducts }: { product: any
                       </li>
                     ))}
                     {features.length > 4 && (
-                      <li className="text-xs text-primary font-medium mt-1 cursor-pointer" onClick={() => setActiveTab('info')}>
+                      <li
+                        className="text-xs text-primary font-medium mt-1 cursor-pointer hover:underline"
+                        onClick={() => {
+                          setActiveTab('info');
+                          setTimeout(() => {
+                            document.getElementById('product-tabs')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                          }, 50);
+                        }}
+                      >
                         + {features.length - 4} đặc điểm nữa →
                       </li>
                     )}
@@ -112,7 +120,7 @@ export default function ProductView({ product, relatedProducts }: { product: any
       </section>
 
       {(features.length > 0 || specLines.length > 0) && (
-      <section className="py-20 bg-gray-50 border-y border-gray-100">
+      <section id="product-tabs" className="py-20 bg-gray-50 border-y border-gray-100">
         <div className="container px-4">
           <div className="max-w-4xl mx-auto">
             <div className="flex border-b border-gray-200 mb-8 overflow-x-auto">

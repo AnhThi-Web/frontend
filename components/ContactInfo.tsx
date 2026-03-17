@@ -24,16 +24,16 @@ export const ContactInfo = () => {
               <MapPin className="shrink-0 text-primary mt-0.5" size={16} />
               <span>Khu liên cơ Vân Hồ - 52 Lê Đại Hành, Hai Bà Trưng, Hà Nội, Việt Nam</span>
             </div>
-            <div className="mt-2 ml-6 space-y-1">
-              <div className="flex gap-3 text-sm text-gray-600">
-                <Phone className="shrink-0 text-primary" size={16} />
-                <div className="space-y-0.5">
+          </div>
+        {/* Phone */}
+          <div>
+            <div className="flex gap-3 text-sm text-gray-600">
+              <Phone className="shrink-0 text-primary" size={16} />
+              <div className="space-y-0.5">
                   <div><a href="tel:0336680264" className="hover:text-primary transition-colors">0336680264</a></div>
-                </div>
               </div>
             </div>
           </div>
-
       
 
           {/* Email */}
@@ -51,7 +51,7 @@ export const ContactInfo = () => {
             <h4 className="font-bold text-gray-800 mb-3">Kết nối với chúng tôi</h4>
             <div className="flex gap-4">
               <a 
-                href="https://www.facebook.com/mitekchemicals/" 
+                href="https://www.facebook.com" 
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center hover:bg-primary/80 transition-colors"

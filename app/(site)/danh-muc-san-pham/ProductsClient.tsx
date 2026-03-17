@@ -1,26 +1,15 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { Search, ChevronRight, LayoutGrid, List, Filter, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-export default function ProductsClient({ categories, products }: { categories: any[], products: any[] }) {
-  const pathname = usePathname();
-  const [selectedCategory, setSelectedCategory] = useState("all");
+export default function ProductsClient({ categories, products, initialCategoryId }: { categories: any[], products: any[], initialCategoryId?: string }) {
+  const [selectedCategory, setSelectedCategory] = useState(initialCategoryId ?? "all");
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-
-  useEffect(() => {
-    const categoryMatch = categories.find(cat => cat.slug === pathname.replace('/', ''));
-    if (categoryMatch) {
-      setSelectedCategory(categoryMatch.id);
-    } else if (pathname === "/danh-muc-san-pham") {
-      setSelectedCategory("all");
-    }
-  }, [pathname, categories]);
 
   const filteredProducts = products.filter((product) => {
     const matchesCategory = selectedCategory === "all" || product.categoryId === selectedCategory;
@@ -175,7 +164,7 @@ export default function ProductsClient({ categories, products }: { categories: a
                         />
                         <div className="absolute inset-0 bg-primary/80 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                           <Link href={`/${product.slug}`}>
-                            <Button variant="outline" className="text-white border-white hover:bg-white hover:text-primary rounded-none">
+                            <Button variant="outline" className="text-black border-white hover:bg-white hover:text-primary rounded-none">
                               Chi tiết
                             </Button>
                           </Link>

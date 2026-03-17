@@ -27,7 +27,7 @@ export default function AdminDashboard() {
     <div className="p-8">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-slate-900 mb-2">
-          ANH THI Admin Panel
+          Bảng điều khiển quản trị
         </h1>
         <p className="text-slate-500">
           Xin chào, <span className="font-semibold text-primary">{session?.user?.name}</span>. Chúc bạn một ngày làm việc hiệu quả!
@@ -103,7 +103,7 @@ export default function AdminDashboard() {
                   Cài Đặt
                 </h2>
                 <p className="text-sm text-gray-500">
-                  Coming Soon
+                  Sắp ra mắt
                 </p>
               </div>
             </div>

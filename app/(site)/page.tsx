@@ -110,19 +110,18 @@ export default async function Index() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {featuredProducts.map((product) => (
-              <div key={product.id} className="product-card">
+          {featuredProducts.map((product) => (
+              <Link key={product.id} href={`/${product.slug}`} className="product-card block">
                 <div className="product-card-image">
                   <img
                     src={product.imageUrl || ""}
                     alt={product.name}
+                    className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500 p-6"
                   />
                   <div className="absolute inset-0 bg-primary/80 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <Link href={`/${product.id}`}>
-                      <Button variant="outline" className="text-white border-white hover:bg-white hover:text-primary rounded-none">
-                        Chi tiết
-                      </Button>
-                    </Link>
+                    <Button variant="outline" className="text-white border-white hover:bg-white hover:text-primary rounded-none">
+                      Chi tiết
+                    </Button>
                   </div>
                 </div>
                 <div className="p-6">
@@ -134,7 +133,7 @@ export default async function Index() {
                     {product.description}
                   </p>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
 
@@ -151,7 +150,7 @@ export default async function Index() {
       {/* CTA Section */}
       <section className="py-20 bg-primary text-white text-center relative overflow-hidden">
         <div className="absolute inset-0 opacity-10">
-          <img src="https://bizweb.dktcdn.net/100/424/639/themes/823315/assets/image-abouts.png?1763658688907" alt="" className="w-full h-full object-cover" />
+          <img src="/assets/about.png" alt="" className="w-full h-full object-cover" />
         </div>
         <div className="container relative z-10 px-4">
           <h2 className="text-3xl md:text-4xl mb-6">BẠN CẦN TƯ VẤN VỀ GIẢI PHÁP XI MẠ?</h2>

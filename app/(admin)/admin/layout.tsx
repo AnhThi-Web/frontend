@@ -6,6 +6,9 @@ import { AdminLayoutClient } from "@/components/admin/AdminLayoutClient";
 export const metadata: Metadata = {
   title: "ANH THI Admin Dashboard",
   description: "Hệ thống quản trị ANH THI",
+  icons: {
+    icon: "/assets/logo.png",
+  }
 };
 
 export default function AdminLayout({

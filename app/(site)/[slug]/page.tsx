@@ -13,7 +13,7 @@ export default async function DynamicPage({ params }: { params: { slug: string }
   if (category) {
     const categories = await db.category.findMany({ orderBy: { createdAt: "asc" } });
     const products = await db.product.findMany({ include: { category: true } });
-    return <ProductsClient categories={categories} products={products} />;
+    return <ProductsClient categories={categories} products={products} initialCategoryId={category.id} />;
   }
 
   // Check if it's a product

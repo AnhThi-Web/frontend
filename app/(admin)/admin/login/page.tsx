@@ -46,9 +46,9 @@ export default function AdminLoginPage() {
           <h1 className="text-3xl font-bold text-center mb-2">
             Đăng Nhập Admin
           </h1>
-          <p className="text-gray-500 text-center mb-8">
+          {/* <p className="text-gray-500 text-center mb-8">
             ANH THI Management
-          </p>
+          </p> */}
 
           {error && (
             <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
@@ -94,7 +94,7 @@ export default function AdminLoginPage() {
           </form>
 
           <p className="text-xs text-gray-500 text-center mt-6">
-            Demo: admin@anhthi.com / password123
+            {/* Demo: admin@anhthi.com / password123 */}
           </p>
         </div>
       </div>
