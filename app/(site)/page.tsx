@@ -27,7 +27,7 @@ export default async function Index() {
         <div className="container px-4">
           <div className="text-center mb-8">
              <h2 className="text-2xl font-bold font-oswald uppercase text-slate-900 tracking-wider">Danh mục sản phẩm</h2>
-             <div className="w-12 h-1 bg-primary mx-auto mt-2" />
+             <div className="w-12 h-1 bg-primary mx-auto mt-3" />
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-6">
             {categories.map((cat) => (
@@ -39,10 +39,10 @@ export default async function Index() {
                 <div className="text-primary group-hover:scale-110 transition-transform mb-4 flex justify-center">
                   <ShieldCheck className="w-8 h-8" />
                 </div>
-                <h3 className="font-oswald uppercase text-sm font-semibold tracking-wider text-gray-800">
+                <h3 className="font-oswald uppercase text-sm font-bold tracking-wider text-gray-900">
                   {cat.name}
                 </h3>
-                <p className="text-xs text-slate-400 mt-1">{cat._count.products} sản phẩm</p>
+                <p className="text-xs text-slate-600 font-medium mt-2">{cat._count.products} sản phẩm</p>
               </Link>
             ))}
           </div>
@@ -60,16 +60,16 @@ export default async function Index() {
                   alt="Mitek Factory" 
                   className="w-full h-auto relative z-10"
                 />
-                <div className="absolute -top-6 -left-6 w-24 h-24 bg-primary/10 -z-0" />
-                <div className="absolute -bottom-6 -right-6 w-32 h-32 border-4 border-secondary/20 -z-0" />
+                <div className="absolute -top-6 -left-6 w-24 h-24 bg-primary/10 z-0" />
+                <div className="absolute -bottom-6 -right-6 w-32 h-32 border-4 border-secondary/20 z-0" />
               </div>
             </div>
             <div className="lg:w-1/2">
               <span className="text-primary font-oswald uppercase tracking-widest font-bold mb-4 block">Về chúng tôi</span>
-              <h2 className="text-3xl md:text-5xl mb-8 leading-tight">
+              <h2 className="text-3xl md:text-5xl font-bold mb-8 leading-tight text-gray-900">
                 ANH THI - ĐỐI TÁC TIN CẬY TRONG LĨNH VỰC <span className="text-primary">XI MẠ</span>
               </h2>
-              <div className="space-y-6 text-gray-600 leading-relaxed">
+              <div className="space-y-6 text-gray-800 font-medium text-lg leading-relaxed">
                 <p>
                   <strong>ANH THI</strong> là doanh nghiệp sản xuất và kinh doanh hóa chất phụ gia đặc chủng cho ngành hoàn thiện bề mặt kim loại – xi mạ. 
                   Tọa lạc tại KCN Xuyên Á, chúng tôi vận hành nhà máy với công suất 4.000 tấn/năm.
@@ -102,9 +102,9 @@ export default async function Index() {
       <section className="section-gray py-24">
         <div className="container px-4">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="section-title">SẢN PHẨM TIÊU BIỂU</h2>
+            <h2 className="section-title text-gray-900 font-bold">SẢN PHẨM TIÊU BIỂU</h2>
             <div className="w-20 h-1.5 bg-primary mx-auto mb-6" />
-            <p className="section-subtitle text-gray-500">
+            <p className="section-subtitle text-gray-800 font-medium">
               Khám phá các dòng hóa chất và phụ gia xi mạ chất lượng cao được tin dùng bởi hàng trăm doanh nghiệp.
             </p>
           </div>
@@ -125,11 +125,11 @@ export default async function Index() {
                   </div>
                 </div>
                 <div className="p-6">
-                  <span className="text-xs text-primary font-oswald uppercase tracking-wider mb-2 block">{product.category.name}</span>
-                  <h3 className="font-bold text-lg mb-2 text-gray-800 line-clamp-1 group-hover:text-primary transition-colors">
+                  <span className="text-xs text-primary font-oswald uppercase font-bold tracking-wider mb-2 block">{product.category.name}</span>
+                  <h3 className="font-bold text-lg mb-2 text-gray-900 line-clamp-1 group-hover:text-primary transition-colors">
                     {product.name}
                   </h3>
-                  <p className="text-sm text-gray-500 line-clamp-2 min-h-[40px]">
+                  <p className="text-sm text-gray-700 font-medium line-clamp-2 min-h-[40px]">
                     {product.description}
                   </p>
                 </div>

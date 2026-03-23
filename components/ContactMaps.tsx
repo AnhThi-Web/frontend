@@ -18,7 +18,7 @@ export const ContactMaps = () => {
         <div className="p-4 bg-gray-50">
           <h3 className="font-bold text-gray-800 mb-2">Văn phòng Hà Nội</h3>
           <p className="text-sm text-gray-600">
-            Khu liên cơ Vân Hồ - 52 Lê Đại Hành, Hai Bà Trưng, Hà Nội, Việt Nam
+            Nhà Số 10, Ngõ 243/44, Tổ 8 Ngọc Thuỵ, Phường Bồ Đề, TP Hà Nội, Việt Nam
           </p>
         </div>
       </div>

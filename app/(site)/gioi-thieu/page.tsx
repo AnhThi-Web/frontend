@@ -49,7 +49,7 @@ export default function About() {
               </h2>
               <div className="space-y-6 text-gray-600 leading-relaxed text-lg">
                 <p>
-                  <strong>ANH THI</strong> là doanh nghiệp sản xuất và kinh doanh hóa chất phụ gia đặc chủng, tọa lạc tại Khu liên cơ Vân Hồ - 52 Lê Đại Hành, Hai Bà Trưng, Hà Nội, Việt Nam. Chúng tôi tự hào sở hữu nhà máy hiện đại với công suất <strong>4.000 tấn/năm</strong> cùng kho chứa <strong>1.500 tấn</strong>, vận hành nghiêm ngặt theo các tiêu chuẩn an toàn và môi trường quốc tế.
+                  <strong>ANH THI</strong> là doanh nghiệp sản xuất và kinh doanh hóa chất phụ gia đặc chủng, tọa lạc tại Nhà Số 10, Ngõ 243/44, Tổ 8 Ngọc Thuỵ, Phường Bồ Đề, TP Hà Nội, Việt Nam. Chúng tôi tự hào sở hữu nhà máy hiện đại với công suất <strong>4.000 tấn/năm</strong> cùng kho chứa <strong>1.500 tấn</strong>, vận hành nghiêm ngặt theo các tiêu chuẩn an toàn và môi trường quốc tế.
                 </p>
                 <p>
                   Được dẫn dắt bởi đội ngũ chuyên gia giàu kinh nghiệm trong lĩnh vực hoàn thiện bề mặt kim loại, ANH THI cam kết mang đến những giải pháp công nghệ ưu việt, không ngừng đổi mới để đáp ứng nhu cầu khắt khe của ngành công nghiệp phụ trợ tại Việt Nam và khu vực.
