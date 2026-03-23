@@ -97,7 +97,7 @@ export const Header = () => {
             <img
               src="/assets/logo.png"
               alt="ANH THI Logo"
-              className="h-12 md:h-16 object-contain"
+              className="h-20 md:h-24 object-contain"
             />
           </Link>
 

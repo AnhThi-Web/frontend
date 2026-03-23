@@ -22,7 +22,7 @@ export const ContactInfo = () => {
             <h4 className="font-bold text-gray-800 mb-2">Văn phòng Hà Nội</h4>
             <div className="flex gap-3 text-sm text-gray-600">
               <MapPin className="shrink-0 text-primary mt-0.5" size={16} />
-              <span>Khu liên cơ Vân Hồ - 52 Lê Đại Hành, Hai Bà Trưng, Hà Nội, Việt Nam</span>
+              <span>Nhà Số 10, Ngõ 243/44, Tổ 8 Ngọc Thuỵ, Phường Bồ Đề, TP Hà Nội, Việt Nam</span>
             </div>
           </div>
         {/* Phone */}
@@ -41,7 +41,7 @@ export const ContactInfo = () => {
             <Mail className="shrink-0 text-primary mt-0.5" size={16} />
             <div>
               <a href="mailto:info@anhthi.com" className="text-gray-600 hover:text-primary transition-colors">
-                info@anhthi.com
+                anhthi.chemical@gmail.com
               </a>
             </div>
           </div>

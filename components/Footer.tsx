@@ -12,7 +12,7 @@ export const Footer = () => {
               <img
                 src="/assets/logo.png"
                 alt="ANH THI Logo"
-                className="h-16"
+                className="h-20 md:h-24 object-contain"
               />
             </Link>
             <p className="text-sm leading-relaxed mb-6 text-gray-700">
