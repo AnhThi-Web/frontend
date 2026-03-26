@@ -150,7 +150,7 @@ export default async function Index() {
       {/* CTA Section */}
       <section className="py-20 bg-primary text-white text-center relative overflow-hidden">
         <div className="absolute inset-0 opacity-10">
-          <img src="/assets/about.png" alt="" className="w-full h-full object-cover" />
+          <img src="/assets/congty.jpg" alt="" className="w-full h-full object-cover" />
         </div>
         <div className="container relative z-10 px-4">
           <h2 className="text-3xl md:text-4xl mb-6">BẠN CẦN TƯ VẤN VỀ GIẢI PHÁP XI MẠ?</h2>
