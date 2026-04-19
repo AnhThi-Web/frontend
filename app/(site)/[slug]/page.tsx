@@ -4,6 +4,56 @@ import ProductView from "@/components/site/ProductView";
 import ProductsClient from "../danh-muc-san-pham/ProductsClient";
 import GalleryView from "@/components/site/GalleryView";
 import { galleryDetailData } from "@/lib/mock-data";
+import { Metadata } from "next";
+
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+  const { slug } = params;
+
+  const category = await db.category.findUnique({ where: { slug } });
+  if (category) {
+    return {
+      title: category.name,
+      description: category.description || `Danh mục sản phẩm ${category.name}`,
+      openGraph: {
+        title: category.name,
+        description: category.description || `Danh mục sản phẩm ${category.name}`,
+        url: `/${slug}`,
+        images: category.imageUrl ? [{ url: category.imageUrl }] : undefined,
+      },
+    };
+  }
+
+  const product = await db.product.findUnique({ where: { slug } });
+  if (product) {
+    return {
+      title: product.name,
+      description: product.description || `Sản phẩm ${product.name}`,
+      openGraph: {
+        title: product.name,
+        description: product.description || `Sản phẩm ${product.name}`,
+        url: `/${slug}`,
+        images: product.imageUrl ? [{ url: product.imageUrl }] : undefined,
+      },
+    };
+  }
+
+  const gallery = galleryDetailData[slug];
+  if (gallery) {
+    return {
+      title: gallery.title,
+      description: gallery.title,
+      openGraph: {
+        title: gallery.title,
+        url: `/${slug}`,
+        images: gallery.images && gallery.images.length > 0 ? [{ url: gallery.images[0].src }] : undefined,
+      },
+    };
+  }
+
+  return {
+    title: "Không tìm thấy trang",
+  };
+}
 
 export default async function DynamicPage({ params }: { params: { slug: string } }) {
   const { slug } = params;

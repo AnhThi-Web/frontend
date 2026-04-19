@@ -3,6 +3,33 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ChevronRight, Calendar, User, Facebook, Twitter, MessageCircle, Share2, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Metadata } from "next";
+
+export async function generateMetadata({ params }: { params: { newsId: string } }): Promise<Metadata> {
+  const { newsId } = params;
+  
+  const news = await db.news.findUnique({
+    where: { slug: newsId }
+  });
+
+  if (!news || !news.published) {
+    return {
+      title: "Không tìm thấy trang",
+    };
+  }
+
+  return {
+    title: news.title,
+    description: news.excerpt || news.title,
+    openGraph: {
+      title: news.title,
+      description: news.excerpt || news.title,
+      url: `/tin-tuc/${newsId}`,
+      type: "article",
+      images: news.imageUrl ? [{ url: news.imageUrl }] : undefined,
+    },
+  };
+}
 
 export default async function NewsDetail({ params }: { params: { newsId: string } }) {
   const { newsId } = params;
